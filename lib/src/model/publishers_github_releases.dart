@@ -10,5 +10,6 @@ abstract class PublishersGithubReleases with _$PublishersGithubReleases {
     bool prerelease,
   }) = _PublishersGithubReleases;
 
-  factory PublishersGithubReleases.fromJson(Map<String, dynamic> json) => _$PublishersGithubReleasesFromJson(json);
+  factory PublishersGithubReleases.fromJson(Map<String, dynamic> json) =>
+      _$PublishersGithubReleasesFromJson(json);
 }

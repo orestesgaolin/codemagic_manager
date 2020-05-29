@@ -1,7 +1,8 @@
 export 'api_response.dart';
 export 'application.dart';
-export 'build.dart';
 export 'artefact.dart';
+export 'build.dart';
+export 'build_action.dart';
 export 'builds.dart';
 export 'commit.dart';
 export 'config.dart';

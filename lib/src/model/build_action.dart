@@ -11,5 +11,6 @@ abstract class BuildAction with _$BuildAction {
     bool alwaysRun,
   }) = _BuildAction;
 
-  factory BuildAction.fromJson(Map<String, dynamic> json) => _$BuildActionFromJson(json);
+  factory BuildAction.fromJson(Map<String, dynamic> json) =>
+      _$BuildActionFromJson(json);
 }

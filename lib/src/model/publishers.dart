@@ -18,5 +18,6 @@ abstract class Publishers with _$Publishers {
     //TODO: static pages
   }) = _Publishers;
 
-  factory Publishers.fromJson(Map<String, dynamic> json) => _$PublishersFromJson(json);
+  factory Publishers.fromJson(Map<String, dynamic> json) =>
+      _$PublishersFromJson(json);
 }

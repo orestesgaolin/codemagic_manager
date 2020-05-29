@@ -1,9 +1,6 @@
-import 'package:codemagic_manager/src/model/artefact.dart';
-import 'package:codemagic_manager/src/model/build_action.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'commit.dart';
-import 'config.dart';
+import 'model.dart';
 
 part 'build.freezed.dart';
 part 'build.g.dart';

@@ -47,8 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () async {
             final result = await client.getBuilds();
             if (result.wasSuccessful) {
-              print(
-                  'Success! Fetched ${result.data.applications.length} apps and ${result.data.builds.length} builds');
+              print('Success! Fetched ${result.data.applications.length} apps '
+                  'and ${result.data.builds.length} builds');
             } else {
               print('Something went wrong');
             }

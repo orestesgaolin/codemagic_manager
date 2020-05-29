@@ -14,5 +14,6 @@ abstract class Artefact with _$Artefact {
     String versionName,
   }) = _Artefact;
 
-  factory Artefact.fromJson(Map<String, dynamic> json) => _$ArtefactFromJson(json);
+  factory Artefact.fromJson(Map<String, dynamic> json) =>
+      _$ArtefactFromJson(json);
 }

@@ -1,5 +1,6 @@
-import 'package:codemagic_manager/src/model/platform.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'model.dart';
 
 part 'build_settings.freezed.dart';
 part 'build_settings.g.dart';

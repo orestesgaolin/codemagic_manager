@@ -10,5 +10,6 @@ abstract class PublishersEmail with _$PublishersEmail {
     List<String> recipients,
   }) = _PublishersEmail;
 
-  factory PublishersEmail.fromJson(Map<String, dynamic> json) => _$PublishersEmailFromJson(json);
+  factory PublishersEmail.fromJson(Map<String, dynamic> json) =>
+      _$PublishersEmailFromJson(json);
 }

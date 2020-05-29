@@ -10,5 +10,6 @@ abstract class CodeSigningKeystore with _$CodeSigningKeystore {
     String filePath,
   }) = _CodeSigningKeystore;
 
-  factory CodeSigningKeystore.fromJson(Map<String, dynamic> json) => _$CodeSigningKeystoreFromJson(json);
+  factory CodeSigningKeystore.fromJson(Map<String, dynamic> json) =>
+      _$CodeSigningKeystoreFromJson(json);
 }
