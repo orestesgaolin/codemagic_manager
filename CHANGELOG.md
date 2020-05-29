@@ -1,3 +1,7 @@
+## [0.1.2] - Platforms
+
+* Added missing platforms
+
 ## [0.1.1+1] - Improvements
 
 * Improve quality of code, document API etc.
