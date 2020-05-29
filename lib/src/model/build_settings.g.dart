@@ -83,4 +83,7 @@ const _$PlatformEnumMap = {
   Platform.android: 'android',
   Platform.ios: 'ios',
   Platform.web: 'web',
+  Platform.windows: 'windows',
+  Platform.linux: 'linux',
+  Platform.macos: 'macos',
 };

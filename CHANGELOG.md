@@ -1,3 +1,7 @@
+## [0.1.3] - Platform issues
+
+* Fixed missing platforms
+
 ## [0.1.2+1] - Package info
 
 * Added some package information like issue tracker
