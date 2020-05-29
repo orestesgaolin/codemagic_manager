@@ -4,6 +4,8 @@ Simple unofficial api client to fetch builds and applications details from your 
 
 ## Getting Started
 
+Codemagic has recently exposed an API to access information about builds and applications. This is a simple wrapper to help you manage your builds.
+
 ### API documentation
 
 First of all check the official [Codemagic API docs here](https://docs.codemagic.io/rest-api/overview/). The API is in preview and may change significantly during development period.
@@ -62,4 +64,4 @@ This library is a work in progress. Some models are not generated yet and others
 
 ## Contributions
 
-All the contributions are welcome! Please file and issue or create PR if you would like to improve the library. 
+All the contributions are welcome! Please feel free to file issues or create PR if you would like to improve the library. 
