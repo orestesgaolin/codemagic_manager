@@ -1,7 +1,10 @@
 name: codemagic_manager
 description: Package allowing to query Codemagic builds and applications from the recently exposed API
-version: 0.1.2
+version: 0.1.2+1
 homepage: https://roszkowski.dev
+issue_tracker: https://github.com/orestesgaolin/codemagic_manager/issues
+repository: https://github.com/orestesgaolin/codemagic_manager
+documentation: https://pub.dev/documentation/codemagic_manager/latest/
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -1,3 +1,7 @@
+## [0.1.2+1] - Package info
+
+* Added some package information like issue tracker
+
 ## [0.1.2] - Platforms
 
 * Added missing platforms
