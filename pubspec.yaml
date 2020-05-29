@@ -1,7 +1,6 @@
 name: codemagic_manager
 description: Package allowing to query and manage Codemagic builds
 version: 0.1.0
-author: Dominik Roszkowski <dominik@roszkowski.dev>
 homepage: https://roszkowski.dev
 
 environment:
