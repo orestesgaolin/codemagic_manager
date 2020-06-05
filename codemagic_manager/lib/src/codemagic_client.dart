@@ -77,4 +77,68 @@ class CodemagicClient {
       return ApiResponse(wasSuccessful: false, error: 'Unknown error');
     }
   }
+
+  /// Starts new build for [Application] by its [appId], [workflowId]
+  /// and [branch]
+  Future<ApiResponse<BuildResponse>> startBuild(
+    String appId,
+    String workflowId,
+    String branch, {
+    bool sshAccesEnabled = false,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '$apiUrl/builds',
+        data: {
+          'appId': '$appId',
+          'workflowId': '$workflowId',
+          'branch': '$branch',
+          'sshAccesEnabled': sshAccesEnabled,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authKey',
+          },
+        ),
+      );
+      final data = response.data;
+      if (data != null) {
+        final app = BuildResponse.fromJson(data);
+        return ApiResponse(wasSuccessful: true, data: app);
+      }
+      return ApiResponse(wasSuccessful: false, error: response.statusMessage);
+    } on DioError catch (e) {
+      return ApiResponse(
+          wasSuccessful: false, error: 'HTTP error: ${e.message}');
+    } catch (e) {
+      print(e);
+      return ApiResponse(wasSuccessful: false, error: 'Unknown error');
+    }
+  }
+
+  /// Cancels build by is [buildId]. Returns HTTP 208 if build already cancelled
+  Future<ApiResponse<CancelBuildResponse>> cancelBuild(String buildId) async {
+    try {
+      final response = await _dio.post(
+        '$apiUrl/builds/$buildId/cancel',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authKey',
+          },
+        ),
+      );
+      final data = response.data;
+      if (data != null) {
+        final app = CancelBuildResponse.fromJson(data);
+        return ApiResponse(wasSuccessful: true, data: app);
+      }
+      return ApiResponse(wasSuccessful: false, error: response.statusMessage);
+    } on DioError catch (e) {
+      return ApiResponse(
+          wasSuccessful: false, error: 'HTTP error: ${e.message}');
+    } catch (e) {
+      print(e);
+      return ApiResponse(wasSuccessful: false, error: 'Unknown error');
+    }
+  }
 }

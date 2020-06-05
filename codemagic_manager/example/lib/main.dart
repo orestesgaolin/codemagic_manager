@@ -28,6 +28,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   CodemagicClient client;
+  final List<Build> builds = [];
 
   @override
   void initState() {
@@ -41,20 +42,85 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FlatButton(
-          child: Text('Fetch'),
-          onPressed: () async {
-            final result = await client.getBuilds();
-            if (result.wasSuccessful) {
-              print('Success! Fetched ${result.data.applications.length} apps '
-                  'and ${result.data.builds.length} builds');
-            } else {
-              print('Something went wrong');
-            }
-          },
+      body: SafeArea(
+        child: Column(
+          children: [
+            RaisedButton(
+              child: Text('Fetch builds'),
+              onPressed: onFetch,
+            ),
+            if (builds.length > 0)
+              RaisedButton(
+                child: Text('Start latest build again'),
+                onPressed: onStart,
+              ),
+            if (builds.length > 0)
+              RaisedButton(
+                child: Text('Cancel latest build'),
+                onPressed: onCancel,
+              ),
+            Flexible(
+              child: ListView.builder(
+                itemCount: builds.length,
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(builds[index].id ?? 'no id'),
+                  subtitle:
+                      Text(builds[index].status.toString() ?? 'no status'),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  void onStart() async {
+    try {
+      final appId = builds.first.appId;
+      final wId = builds.first.workflowId;
+      final branch = builds.first.branch;
+      final result = await client.startBuild(appId, wId, branch);
+      if (result.wasSuccessful) {
+        print('Success!');
+        onFetch();
+      } else {
+        print('Something went wrong: ${result.error}');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void onCancel() async {
+    try {
+      final buildId = builds.first.id;
+      final result = await client.cancelBuild(buildId);
+      if (result.wasSuccessful) {
+        print('Success!');
+        onFetch();
+      } else {
+        print('Something went wrong: ${result.error}');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void onFetch() async {
+    try {
+      final result = await client.getBuilds();
+      if (result.wasSuccessful) {
+        print('Success! Fetched ${result.data.applications.length}'
+            ' apps and ${result.data.builds.length} builds');
+        builds.clear();
+        builds.addAll(result.data.builds);
+        setState(() {});
+      } else {
+        print('Something went wrong: ${result.error}');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

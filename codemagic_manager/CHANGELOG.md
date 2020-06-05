@@ -1,3 +1,7 @@
+## [0.2.0] - Starting and cancelling builds
+
+* Added methods to start and cancel running build
+
 ## [0.1.3] - Platform issues
 
 * Fixed missing platforms
