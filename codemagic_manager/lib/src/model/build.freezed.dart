@@ -26,7 +26,7 @@ class _$BuildTearOff {
       int index,
       DateTime finishedAt,
       DateTime startedAt,
-      String status,
+      BuildStatus status,
       String tag,
       String message,
       String version,
@@ -66,7 +66,7 @@ mixin _$Build {
   int get index;
   DateTime get finishedAt;
   DateTime get startedAt;
-  String get status;
+  BuildStatus get status;
   String get tag;
   String get message;
   String get version;
@@ -90,7 +90,7 @@ abstract class $BuildCopyWith<$Res> {
       int index,
       DateTime finishedAt,
       DateTime startedAt,
-      String status,
+      BuildStatus status,
       String tag,
       String message,
       String version,
@@ -141,7 +141,7 @@ class _$BuildCopyWithImpl<$Res> implements $BuildCopyWith<$Res> {
           finishedAt == freezed ? _value.finishedAt : finishedAt as DateTime,
       startedAt:
           startedAt == freezed ? _value.startedAt : startedAt as DateTime,
-      status: status == freezed ? _value.status : status as String,
+      status: status == freezed ? _value.status : status as BuildStatus,
       tag: tag == freezed ? _value.tag : tag as String,
       message: message == freezed ? _value.message : message as String,
       version: version == freezed ? _value.version : version as String,
@@ -186,7 +186,7 @@ abstract class _$BuildCopyWith<$Res> implements $BuildCopyWith<$Res> {
       int index,
       DateTime finishedAt,
       DateTime startedAt,
-      String status,
+      BuildStatus status,
       String tag,
       String message,
       String version,
@@ -240,7 +240,7 @@ class __$BuildCopyWithImpl<$Res> extends _$BuildCopyWithImpl<$Res>
           finishedAt == freezed ? _value.finishedAt : finishedAt as DateTime,
       startedAt:
           startedAt == freezed ? _value.startedAt : startedAt as DateTime,
-      status: status == freezed ? _value.status : status as String,
+      status: status == freezed ? _value.status : status as BuildStatus,
       tag: tag == freezed ? _value.tag : tag as String,
       message: message == freezed ? _value.message : message as String,
       version: version == freezed ? _value.version : version as String,
@@ -295,7 +295,7 @@ class _$_Build implements _Build {
   @override
   final DateTime startedAt;
   @override
-  final String status;
+  final BuildStatus status;
   @override
   final String tag;
   @override
@@ -394,7 +394,7 @@ abstract class _Build implements Build {
       int index,
       DateTime finishedAt,
       DateTime startedAt,
-      String status,
+      BuildStatus status,
       String tag,
       String message,
       String version,
@@ -424,7 +424,7 @@ abstract class _Build implements Build {
   @override
   DateTime get startedAt;
   @override
-  String get status;
+  BuildStatus get status;
   @override
   String get tag;
   @override

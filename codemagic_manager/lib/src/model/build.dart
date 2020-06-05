@@ -5,6 +5,30 @@ import 'model.dart';
 part 'build.freezed.dart';
 part 'build.g.dart';
 
+enum BuildStatus {
+  canceled,
+  finished,
+  preparing,
+  failed,
+  timeout,
+  fetching,
+  building,
+  queued,
+}
+
+extension BuildStatusExt on BuildStatus {
+  bool get isRunning =>
+      this == BuildStatus.preparing ||
+      this == BuildStatus.queued ||
+      this == BuildStatus.fetching ||
+      this == BuildStatus.building;
+
+  bool get isFailed =>
+      this == BuildStatus.failed || this == BuildStatus.timeout;
+
+  bool get isSuccess => this == BuildStatus.finished;
+}
+
 @freezed
 abstract class Build with _$Build {
   factory Build({
@@ -20,7 +44,7 @@ abstract class Build with _$Build {
     int index,
     DateTime finishedAt,
     DateTime startedAt,
-    String status,
+    BuildStatus status,
     String tag,
     String message,
     String version,

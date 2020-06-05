@@ -1,10 +1,8 @@
 analyzer:
   exclude:
     - build/**
-    - "**/*.freezed.dart"
-    - "*.freezed.dart"
-    - "*.g.dart"
     - "**/*.g.dart"
+    - "**/*.freezed.dart"
 
 linter:
   rules:
@@ -14,7 +12,7 @@ linter:
     - library_names
     - file_names
     - library_prefixes
-    # - non_constant_identifier_names
+    - non_constant_identifier_names
     - constant_identifier_names # prefer
     - directives_ordering
     - lines_longer_than_80_chars # avoid

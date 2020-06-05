@@ -12,12 +12,18 @@ class CodemagicClient {
   /// URL of Codemagic API
   final String apiUrl;
 
-  final Dio _dio = Dio();
+  final Dio _dio;
+
+  final int timeoutInSeconds;
 
   /// CodemagicClient constructor
-  CodemagicClient({@required this.authKey, @required this.apiUrl})
-      : assert(authKey != null, 'Codemagic auth key is required'),
-        assert(apiUrl != null, 'Codemagic api URL is required');
+  CodemagicClient({
+    @required this.authKey,
+    @required this.apiUrl,
+    this.timeoutInSeconds = 30,
+  })  : assert(authKey != null, 'Codemagic auth key is required'),
+        assert(apiUrl != null, 'Codemagic api URL is required'),
+        _dio = Dio(BaseOptions(connectTimeout: timeoutInSeconds * 1000));
 
   /// Retrieves [Builds] object containing list of [Application]s and [Build]s
   Future<ApiResponse<Builds>> getBuilds() async {
