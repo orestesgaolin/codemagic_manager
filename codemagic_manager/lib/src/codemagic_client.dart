@@ -83,9 +83,8 @@ class CodemagicClient {
   Future<ApiResponse<BuildResponse>> startBuild(
     String appId,
     String workflowId,
-    String branch, {
-    bool sshAccesEnabled = false,
-  }) async {
+    String branch,
+  ) async {
     try {
       final response = await _dio.post(
         '$apiUrl/builds',
@@ -93,7 +92,6 @@ class CodemagicClient {
           'appId': '$appId',
           'workflowId': '$workflowId',
           'branch': '$branch',
-          'sshAccesEnabled': sshAccesEnabled,
         },
         options: Options(
           headers: {
