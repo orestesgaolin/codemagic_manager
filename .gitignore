@@ -76,3 +76,5 @@ build/
 fvm
 pubspec.lock
 .vscode/settings.json
+.fvm/
+fvm/
