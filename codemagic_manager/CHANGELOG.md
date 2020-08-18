@@ -1,3 +1,8 @@
+## [0.2.1] - Tweaks and docs
+
+* Updated docs and dependencies
+* Removed `sshAccessEnabled` in `startBuild` as it's [no longer configured when starting build](https://docs.codemagic.io/troubleshooting/accessing-builder-machine-via-ssh/) but always available
+
 ## [0.2.0] - Starting and cancelling builds
 
 * Added methods to start and cancel running build
