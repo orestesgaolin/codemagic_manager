@@ -31,7 +31,7 @@ Right now following endpoints are available
 
 **Get Builds**
 
-Object consisting of two sets of informations:
+Object consisting of two sets of information:
 
 - list of `Application`s
 - list of `Build`s
@@ -51,6 +51,32 @@ Specific informations about the given `Application`.
 
 ```dart
 final appsResponse = await client.getApplication('application-id');
+if (appsResponse.wasSuccessful) {
+    //handle appsResponse.data
+} else {
+    //handle appsResponse.error
+}
+```
+
+**Start build**
+
+Start build based on the `appId`, `workflowId` and desired `branch`.
+
+```dart
+final appsResponse = await client.startBuild('application-id', 'workflow-id', 'master');
+if (appsResponse.wasSuccessful) {
+    //handle appsResponse.data
+} else {
+    //handle appsResponse.error
+}
+```
+
+**Cancel build**
+
+Cancel build by its id.
+
+```dart
+final appsResponse = await client.cancelBuild('build-id');
 if (appsResponse.wasSuccessful) {
     //handle appsResponse.data
 } else {
