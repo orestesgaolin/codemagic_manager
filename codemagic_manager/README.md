@@ -10,7 +10,7 @@ Codemagic has recently exposed an API to access information about builds and app
 
 Take a look at example:
 
-![example app](img/screenshot.png)
+![example app](./img/screenshot.png)
 
 ### API documentation
 

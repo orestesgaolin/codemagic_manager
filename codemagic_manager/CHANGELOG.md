@@ -1,3 +1,6 @@
+## [0.3.0-nullsafety.1] - Null-safety migration
+
+* update docs
 ## [0.3.0-nullsafety.0] - Null-safety migration
 
 * Migrated to nnbd
