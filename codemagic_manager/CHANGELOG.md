@@ -1,4 +1,4 @@
-## [0.3.0-nullsafety] - Null-safety migration
+## [0.3.0-nullsafety.0] - Null-safety migration
 
 * Migrated to nnbd
 * Removed freezed dependency
