@@ -1,15 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'code_signing_keystore.freezed.dart';
 part 'code_signing_keystore.g.dart';
 
-@freezed
-abstract class CodeSigningKeystore with _$CodeSigningKeystore {
-  factory CodeSigningKeystore({
-    String fileName,
-    String filePath,
-  }) = _CodeSigningKeystore;
+@JsonSerializable()
+class CodeSigningKeystore {
+  CodeSigningKeystore({
+    required this.fileName,
+    required this.filePath,
+  });
+  final String fileName;
+  final String filePath;
 
   factory CodeSigningKeystore.fromJson(Map<String, dynamic> json) =>
       _$CodeSigningKeystoreFromJson(json);
+  Map<String, dynamic> toJson() => _$CodeSigningKeystoreToJson(this);
 }

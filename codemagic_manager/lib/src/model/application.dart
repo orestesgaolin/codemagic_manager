@@ -1,30 +1,48 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'repository.dart';
 import 'workflow.dart';
 
-part 'application.freezed.dart';
 part 'application.g.dart';
 
 enum UserRights { delete }
 
-@freezed
-abstract class Application with _$Application {
-  factory Application({
-    @JsonKey(name: '_id') @required String id,
-    String appName,
-    bool archived,
-    List<String> branches,
-    String iconUrl,
-    String lastBuildId,
-    String ownerTeam,
-    List<String> projectFiles,
-    Repository repository,
-    List<UserRights> userRights,
-    List<String> workflowIds,
-    Map<String, Workflow> workflows,
-  }) = _Application;
+@JsonSerializable()
+class Application {
+  Application({
+    required this.id,
+    required this.appName,
+    required this.archived,
+    required this.branches,
+    this.iconUrl,
+    this.lastBuildId,
+    this.ownerTeam,
+    this.projectFiles,
+    this.repository,
+    this.userRights,
+    required this.workflowIds,
+    required this.workflows,
+  });
+
+  @JsonKey(name: '_id')
+  final String id;
+  final String appName;
+  final bool archived;
+  @JsonKey(defaultValue: [])
+  final List<String> branches;
+  final String? iconUrl;
+  final String? lastBuildId;
+  final String? ownerTeam;
+  final List<String>? projectFiles;
+  final Repository? repository;
+  final List<UserRights>? userRights;
+  @JsonKey(defaultValue: [])
+  final List<String> workflowIds;
+  @JsonKey(defaultValue: {})
+  final Map<String, Workflow> workflows;
 
   factory Application.fromJson(Map<String, dynamic> json) =>
       _$ApplicationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ApplicationToJson(this);
 }

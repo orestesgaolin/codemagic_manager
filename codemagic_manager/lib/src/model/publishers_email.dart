@@ -1,15 +1,21 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'publishers_email.freezed.dart';
 part 'publishers_email.g.dart';
 
-@freezed
-abstract class PublishersEmail with _$PublishersEmail {
-  factory PublishersEmail({
-    bool enabled,
-    List<String> recipients,
-  }) = _PublishersEmail;
+@JsonSerializable()
+class PublishersEmail {
+  PublishersEmail({
+    required this.enabled,
+    required this.recipients,
+  });
+
+  @JsonKey(defaultValue: false)
+  final bool enabled;
+  @JsonKey(defaultValue: [])
+  final List<String> recipients;
 
   factory PublishersEmail.fromJson(Map<String, dynamic> json) =>
       _$PublishersEmailFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PublishersEmailToJson(this);
 }

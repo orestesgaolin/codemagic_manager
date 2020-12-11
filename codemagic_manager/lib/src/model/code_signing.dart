@@ -1,18 +1,18 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'code_signing_android.dart';
 import 'code_signing_ios.dart';
 
-part 'code_signing.freezed.dart';
 part 'code_signing.g.dart';
 
-@freezed
-abstract class CodeSigning with _$CodeSigning {
-  factory CodeSigning({
-    CodeSigningAndroid android,
-    CodeSigningIos ios,
-  }) = _CodeSigning;
+@JsonSerializable()
+class CodeSigning {
+  CodeSigning({this.android, this.ios});
+  final CodeSigningAndroid? android;
+  final CodeSigningIos? ios;
 
   factory CodeSigning.fromJson(Map<String, dynamic> json) =>
       _$CodeSigningFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CodeSigningToJson(this);
 }

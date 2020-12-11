@@ -1,13 +1,13 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'owner.freezed.dart';
 part 'owner.g.dart';
 
-@freezed
-abstract class Owner with _$Owner {
-  factory Owner({
-    String name,
-  }) = _Owner;
+@JsonSerializable()
+class Owner {
+  Owner({required this.name});
+
+  final String name;
 
   factory Owner.fromJson(Map<String, dynamic> json) => _$OwnerFromJson(json);
+  Map<String, dynamic> toJson() => _$OwnerToJson(this);
 }

@@ -1,18 +1,27 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'publishers_appstore_connect.freezed.dart';
 part 'publishers_appstore_connect.g.dart';
 
-@freezed
-abstract class PublishersAppstoreConnect with _$PublishersAppstoreConnect {
-  factory PublishersAppstoreConnect({
-    String appStoreConnectAppId,
-    String appStoreConnectAppleId,
-    String appStoreConnectPassword,
-    bool enabled,
-    bool publishWhenFail,
-  }) = _PublishersAppstoreConnect;
+@JsonSerializable()
+class PublishersAppstoreConnect {
+  PublishersAppstoreConnect({
+    this.appStoreConnectAppId,
+    this.appStoreConnectAppleId,
+    this.appStoreConnectPassword,
+    required this.enabled,
+    required this.publishWhenFail,
+  });
+
+  final String? appStoreConnectAppId;
+  final String? appStoreConnectAppleId;
+  final String? appStoreConnectPassword;
+  @JsonKey(defaultValue: false)
+  final bool enabled;
+  @JsonKey(defaultValue: false)
+  final bool publishWhenFail;
 
   factory PublishersAppstoreConnect.fromJson(Map<String, dynamic> json) =>
       _$PublishersAppstoreConnectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PublishersAppstoreConnectToJson(this);
 }

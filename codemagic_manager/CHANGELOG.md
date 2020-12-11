@@ -1,3 +1,11 @@
+## [0.3.0-nullsafety] - Null-safety migration
+
+* Migrated to nnbd
+* Removed freezed dependency
+* Removed dio dependency in favor of HttpClient
+* Added basic tests
+* Simplified API - some properties might change, so please this might be slight BREAKING CHANGE
+
 ## [0.2.1] - Tweaks and docs
 
 * Updated docs and dependencies

@@ -1,15 +1,22 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
-part 'publishers_github_releases.freezed.dart';
 part 'publishers_github_releases.g.dart';
 
-@freezed
-abstract class PublishersGithubReleases with _$PublishersGithubReleases {
-  factory PublishersGithubReleases({
-    bool enabled,
-    bool prerelease,
-  }) = _PublishersGithubReleases;
+@JsonSerializable()
+class PublishersGithubReleases {
+  PublishersGithubReleases({
+    required this.enabled,
+    required this.prerelease,
+  });
+
+  @JsonKey(defaultValue: false)
+  final bool enabled;
+  @JsonKey(defaultValue: false)
+  final bool prerelease;
 
   factory PublishersGithubReleases.fromJson(Map<String, dynamic> json) =>
       _$PublishersGithubReleasesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PublishersGithubReleasesToJson(this);
 }

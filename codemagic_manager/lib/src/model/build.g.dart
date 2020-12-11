@@ -6,59 +6,50 @@ part of 'build.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Build _$_$_BuildFromJson(Map json) {
-  return _$_Build(
+Build _$BuildFromJson(Map json) {
+  return Build(
     id: json['_id'] as String,
     appId: json['appId'] as String,
-    artefacts: (json['artefacts'] as List)
-        ?.map((e) => e == null
-            ? null
-            : Artefact.fromJson((e as Map)?.map(
-                (k, e) => MapEntry(k as String, e),
-              )))
-        ?.toList(),
+    artefacts: (json['artefacts'] as List<dynamic>?)
+            ?.map((e) => Artefact.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList() ??
+        [],
     branch: json['branch'] as String,
-    buildActions: (json['buildActions'] as List)
-        ?.map((e) => e == null
-            ? null
-            : BuildAction.fromJson((e as Map)?.map(
-                (k, e) => MapEntry(k as String, e),
-              )))
-        ?.toList(),
-    commit: json['commit'] == null
-        ? null
-        : Commit.fromJson((json['commit'] as Map)?.map(
-            (k, e) => MapEntry(k as String, e),
-          )),
-    config: json['config'] == null
-        ? null
-        : Config.fromJson((json['config'] as Map)?.map(
-            (k, e) => MapEntry(k as String, e),
-          )),
+    buildActions: (json['buildActions'] as List<dynamic>?)
+            ?.map((e) =>
+                BuildAction.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList() ??
+        [],
+    commit: Commit.fromJson(Map<String, dynamic>.from(json['commit'] as Map)),
+    config: Config.fromJson(Map<String, dynamic>.from(json['config'] as Map)),
     index: json['index'] as int,
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    status: _$enumDecode(_$BuildStatusEnumMap, json['status']),
     finishedAt: json['finishedAt'] == null
         ? null
         : DateTime.parse(json['finishedAt'] as String),
     startedAt: json['startedAt'] == null
         ? null
         : DateTime.parse(json['startedAt'] as String),
-    status: _$enumDecodeNullable(_$BuildStatusEnumMap, json['status']),
-    tag: json['tag'] as String,
-    message: json['message'] as String,
-    version: json['version'] as String,
-    workflowId: json['workflowId'] as String,
+    tag: json['tag'] as String?,
+    message: json['message'] as String?,
+    version: json['version'] as String?,
+    fileWorkflowId: json['fileWorkflowId'] as String?,
+    workflowId: json['workflowId'] as String?,
+    instanceType: json['instanceType'] as String?,
   );
 }
 
-Map<String, dynamic> _$_$_BuildToJson(_$_Build instance) => <String, dynamic>{
+Map<String, dynamic> _$BuildToJson(Build instance) => <String, dynamic>{
       '_id': instance.id,
       'appId': instance.appId,
-      'artefacts': instance.artefacts?.map((e) => e?.toJson())?.toList(),
+      'artefacts': instance.artefacts.map((e) => e.toJson()).toList(),
       'branch': instance.branch,
-      'buildActions': instance.buildActions?.map((e) => e?.toJson())?.toList(),
-      'commit': instance.commit?.toJson(),
-      'config': instance.config?.toJson(),
+      'buildActions': instance.buildActions.map((e) => e.toJson()).toList(),
+      'commit': instance.commit.toJson(),
+      'config': instance.config.toJson(),
       'index': instance.index,
+      'createdAt': instance.createdAt.toIso8601String(),
       'finishedAt': instance.finishedAt?.toIso8601String(),
       'startedAt': instance.startedAt?.toIso8601String(),
       'status': _$BuildStatusEnumMap[instance.status],
@@ -66,38 +57,34 @@ Map<String, dynamic> _$_$_BuildToJson(_$_Build instance) => <String, dynamic>{
       'message': instance.message,
       'version': instance.version,
       'workflowId': instance.workflowId,
+      'fileWorkflowId': instance.fileWorkflowId,
+      'instanceType': instance.instanceType,
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$BuildStatusEnumMap = {

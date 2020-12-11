@@ -1,26 +1,38 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'owner.dart';
 
-part 'repository.freezed.dart';
 part 'repository.g.dart';
 
-@freezed
-abstract class Repository with _$Repository {
-  factory Repository({
-    String defaultBranch,
-    String htmlUrl,
-    @JsonKey(fromJson: Repository.idFromJson) String id,
-    bool isAuthenticationEnabled,
-    String language,
-    Owner owner,
-    String provider,
-    String publicSshKey,
-    String username,
-  }) = _Repository;
+@JsonSerializable()
+class Repository {
+  Repository({
+    required this.defaultBranch,
+    required this.htmlUrl,
+    required this.id,
+    required this.isAuthenticationEnabled,
+    required this.owner,
+    required this.provider,
+    this.language,
+    this.publicSshKey,
+    this.username,
+  });
+
+  final String defaultBranch;
+  final String htmlUrl;
+  @JsonKey(fromJson: Repository.idFromJson)
+  final String id;
+  final bool isAuthenticationEnabled;
+  final String? language;
+  final Owner owner;
+  final String provider;
+  final String? publicSshKey;
+  final String? username;
 
   factory Repository.fromJson(Map<String, dynamic> json) =>
       _$RepositoryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RepositoryToJson(this);
 
   static String idFromJson(dynamic id) => '$id';
 }

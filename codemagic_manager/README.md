@@ -1,6 +1,8 @@
 # codemagic_manager
 
-Simple unofficial api client to fetch builds and applications details from your Codemagic account
+Simple unofficial api client to fetch builds and applications details from your Codemagic account.
+
+**Now with null-safety. Please report any encountered errors.**
 
 ## Getting Started
 
@@ -18,8 +20,8 @@ To initialize the client you should call:
 
 ```dart
 final client = CodemagicClient(
-    apiUrl: 'https://api.codemagic.io',
     authKey: 'AUTH-KEY',
+    apiUrl: 'https://api.codemagic.io',
 ),
 ```
 

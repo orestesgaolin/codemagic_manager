@@ -6,18 +6,14 @@ part of 'cancel_build_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CancelBuildResponse _$_$_CancelBuildResponseFromJson(Map json) {
-  return _$_CancelBuildResponse(
-    build: json['build'] == null
-        ? null
-        : Build.fromJson((json['build'] as Map)?.map(
-            (k, e) => MapEntry(k as String, e),
-          )),
+CancelBuildResponse _$CancelBuildResponseFromJson(Map json) {
+  return CancelBuildResponse(
+    build: Build.fromJson(Map<String, dynamic>.from(json['build'] as Map)),
   );
 }
 
-Map<String, dynamic> _$_$_CancelBuildResponseToJson(
-        _$_CancelBuildResponse instance) =>
+Map<String, dynamic> _$CancelBuildResponseToJson(
+        CancelBuildResponse instance) =>
     <String, dynamic>{
-      'build': instance.build?.toJson(),
+      'build': instance.build.toJson(),
     };
