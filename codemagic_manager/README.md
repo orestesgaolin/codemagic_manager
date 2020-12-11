@@ -2,11 +2,15 @@
 
 Simple unofficial api client to fetch builds and applications details from your Codemagic account.
 
-**Now with null-safety. Please report any encountered errors.**
+**Now with null-safety support. Please report any encountered errors.**
 
 ## Getting Started
 
 Codemagic has recently exposed an API to access information about builds and applications. This is a simple wrapper to help you manage your builds.
+
+Take a look at example:
+
+![example app](img/screenshot.png)
 
 ### API documentation
 
