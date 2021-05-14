@@ -19,8 +19,10 @@ Workflow _$WorkflowFromJson(Map json) {
     isPublic: json['isPublic'] as bool,
     maxBuildDuration: json['maxBuildDuration'] as int,
     name: json['name'] as String,
-    publishers: Publishers.fromJson(
-        Map<String, dynamic>.from(json['publishers'] as Map)),
+    publishers: json['publishers'] == null
+        ? null
+        : Publishers.fromJson(
+            Map<String, dynamic>.from(json['publishers'] as Map)),
   );
 }
 
@@ -32,5 +34,5 @@ Map<String, dynamic> _$WorkflowToJson(Workflow instance) => <String, dynamic>{
       'isPublic': instance.isPublic,
       'maxBuildDuration': instance.maxBuildDuration,
       'name': instance.name,
-      'publishers': instance.publishers.toJson(),
+      'publishers': instance.publishers?.toJson(),
     };

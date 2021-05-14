@@ -33,7 +33,7 @@ class Workflow {
   /// Build duration in seconds
   final int maxBuildDuration;
   final String name;
-  final Publishers publishers;
+  final Publishers? publishers;
   //TODO: test runners
 
   factory Workflow.fromJson(Map<String, dynamic> json) =>

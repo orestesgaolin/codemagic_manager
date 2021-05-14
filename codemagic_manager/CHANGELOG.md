@@ -1,6 +1,11 @@
+## [0.3.0] - Null-safety support
+
+* Migrate to null-safety - please report bugs if found!
+
 ## [0.3.0-nullsafety.1] - Null-safety migration
 
 * update docs
+
 ## [0.3.0-nullsafety.0] - Null-safety migration
 
 * Migrated to nnbd

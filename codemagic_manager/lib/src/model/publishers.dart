@@ -14,9 +14,9 @@ class Publishers {
     required this.githubReleases,
   });
 
-  final PublishersAppstoreConnect appStoreConnect;
-  final PublishersEmail email;
-  final PublishersGithubReleases githubReleases;
+  final PublishersAppstoreConnect? appStoreConnect;
+  final PublishersEmail? email;
+  final PublishersGithubReleases? githubReleases;
   //TODO: s3
   //TODO: slack
   //TODO: static pages
