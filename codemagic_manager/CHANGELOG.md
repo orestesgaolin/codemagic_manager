@@ -1,3 +1,6 @@
+## [0.3.0+1] - Maintenance update
+
+* Docs update
 ## [0.3.0] - Null-safety support
 
 * Migrate to null-safety - please report bugs if found!

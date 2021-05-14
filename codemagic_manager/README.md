@@ -2,15 +2,13 @@
 
 Simple unofficial api client to fetch builds and applications details from your Codemagic account.
 
-**Now with null-safety support. Please report any encountered errors.**
-
 ## Getting Started
 
-Codemagic has recently exposed an API to access information about builds and applications. This is a simple wrapper to help you manage your builds.
+Codemagic has exposed an API to access information about builds and applications. This is a simple wrapper to help you manage your builds.
 
 Take a look at example:
 
-![example app](./img/screenshot.png)
+![example app](https://github.com/orestesgaolin/codemagic_manager/raw/master/codemagic_manager/img/screenshot.png)
 
 ### API documentation
 
@@ -18,7 +16,7 @@ First of all check the official [Codemagic API docs here](https://docs.codemagic
 
 ### Using the client
 
-The library exposes `CodemagicClient` that is a HTTP client using [dio](https://pub.dev/packages/dio) to fetch and deserialize responses from Codemagic API.
+The library exposes `CodemagicClient` that is a HTTP client using `dart:io` http client to fetch and deserialize responses from Codemagic API.
 
 To initialize the client you should call:
 
@@ -92,7 +90,7 @@ if (appsResponse.wasSuccessful) {
 
 ## Work in progress
 
-This library is a work in progress. Some models are not generated yet and others may not be fully tested. 
+This library is a work in progress. Some models are not generated yet and others may not be fully tested. Please report bugs if you encounter any!
 
 ## Contributions
 
