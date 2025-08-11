@@ -1,3 +1,17 @@
+## [0.5.0] - Complete API endpoints implementation
+
+- **NEW**: Added support for all missing Codemagic API endpoints
+- **NEW**: Applications API - `getApplications()` to list all applications
+- **NEW**: Builds API - `getBuild(id)` and `getBuildsForApplication(appId)` for detailed build queries
+- **NEW**: Artifacts API - `getArtifacts(buildId)` and `getArtifact(id)` for build artifact management
+- **NEW**: Caches API - `getCaches()`, `getCache(id)`, and `deleteCache(id)` for cache management
+- **NEW**: Teams API - `getTeams()`, `getTeam(id)`, and `getTeamMembers(teamId)` for team management
+- **NEW**: Enhanced example application with tabbed interface showcasing all new functionality
+- **NEW**: Comprehensive test coverage for all new endpoints
+- **IMPROVED**: Enhanced documentation for existing methods (`getBuilds`, `getApplication`, `startBuild`)
+- **NEW**: Added proper model classes: `Applications`, `Artifacts`, `Cache`, `Team`, `TeamMember`, etc.
+- **NEW**: All models use json_serializable for consistent serialization
+
 ## [0.4.0] - Dart SDK 3.0.0 and null safety
 
 - Updated dependencies

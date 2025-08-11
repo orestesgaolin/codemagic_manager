@@ -23,6 +23,13 @@ class CodemagicClient {
   }) : _client = HttpClient();
 
   /// Retrieves [Builds] object containing list of [Application]s and [Build]s
+  /// 
+  /// This endpoint returns a paginated list of recent builds along with their
+  /// associated applications. The response includes build status, timing information,
+  /// and artifact details.
+  /// 
+  /// Returns [ApiResponse] containing [Builds] data on success, or error information
+  /// on failure (e.g., 401 for invalid authentication).
   Future<ApiResponse<Builds>> getBuilds() async {
     try {
       final request = await _client.getUrl(Uri.parse("$apiUrl/builds"));
@@ -73,6 +80,15 @@ class CodemagicClient {
   }
 
   /// Retrieves information about specific [Application] by its [id]
+  /// 
+  /// Fetches detailed information about a single application including its
+  /// configuration, workflow definitions, repository settings, and metadata.
+  /// 
+  /// Parameters:
+  /// - [id]: The unique identifier of the application
+  /// 
+  /// Returns [ApiResponse] containing [Application] data on success, or error
+  /// information on failure (e.g., 404 if application not found).
   Future<ApiResponse<Application>> getApplication(String id) async {
     try {
       final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$id"));
@@ -138,8 +154,18 @@ class CodemagicClient {
     }
   }
 
-  /// Starts new build for [Application] by its [appId], [workflowId]
-  /// and [branch]
+  /// Starts new build for [Application] by its [appId], [workflowId] and [branch]
+  /// 
+  /// Triggers a new build for the specified application using the given workflow
+  /// and source branch. The build will be queued and executed asynchronously.
+  /// 
+  /// Parameters:
+  /// - [appId]: The unique identifier of the application
+  /// - [workflowId]: The workflow identifier to use for the build
+  /// - [branch]: The source branch name to build from
+  /// 
+  /// Returns [ApiResponse] containing [BuildResponse] with the new build ID on
+  /// success, or error information on failure (e.g., 400 for invalid parameters).
   Future<ApiResponse<BuildResponse>> startBuild(
     String appId,
     String workflowId,
