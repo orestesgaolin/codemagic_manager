@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'model/builds.dart';
 import 'model/model.dart';
 
 /// Client used to retrieve informations from Codemagic API

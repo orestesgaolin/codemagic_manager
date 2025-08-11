@@ -6,12 +6,11 @@ part of 'code_signing_keystore.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CodeSigningKeystore _$CodeSigningKeystoreFromJson(Map json) {
-  return CodeSigningKeystore(
-    fileName: json['fileName'] as String,
-    filePath: json['filePath'] as String,
-  );
-}
+CodeSigningKeystore _$CodeSigningKeystoreFromJson(Map json) =>
+    CodeSigningKeystore(
+      fileName: json['fileName'] as String,
+      filePath: json['filePath'] as String,
+    );
 
 Map<String, dynamic> _$CodeSigningKeystoreToJson(
         CodeSigningKeystore instance) =>

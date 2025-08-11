@@ -6,21 +6,19 @@ part of 'commit.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Commit _$CommitFromJson(Map json) {
-  return Commit(
-    hash: json['hash'] as String?,
-    url: json['url'] as String?,
-    authorEmail: json['authorEmail'] as String?,
-    authorAvatarUrl: json['authorAvatarUrl'] as String?,
-    authorName: json['authorName'] as String?,
-    commmiterName: json['commmiterName'] as String?,
-    commmiterEmail: json['commmiterEmail'] as String?,
-    commitMessage: json['commitMessage'] as String?,
-    branch: json['branch'] as String?,
-    isPoolRequest: json['isPoolRequest'] as bool? ?? false,
-    pullRequestNumber: json['pullRequestNumber'] as String?,
-  );
-}
+Commit _$CommitFromJson(Map json) => Commit(
+      hash: json['hash'] as String?,
+      url: json['url'] as String?,
+      authorEmail: json['authorEmail'] as String?,
+      authorAvatarUrl: json['authorAvatarUrl'] as String?,
+      authorName: json['authorName'] as String?,
+      commmiterName: json['commmiterName'] as String?,
+      commmiterEmail: json['commmiterEmail'] as String?,
+      commitMessage: json['commitMessage'] as String?,
+      branch: json['branch'] as String?,
+      isPoolRequest: json['isPoolRequest'] as bool? ?? false,
+      pullRequestNumber: json['pullRequestNumber'] as String?,
+    );
 
 Map<String, dynamic> _$CommitToJson(Commit instance) => <String, dynamic>{
       'authorAvatarUrl': instance.authorAvatarUrl,

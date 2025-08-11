@@ -6,15 +6,14 @@ part of 'publishers_appstore_connect.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PublishersAppstoreConnect _$PublishersAppstoreConnectFromJson(Map json) {
-  return PublishersAppstoreConnect(
-    appStoreConnectAppId: json['appStoreConnectAppId'] as String?,
-    appStoreConnectAppleId: json['appStoreConnectAppleId'] as String?,
-    appStoreConnectPassword: json['appStoreConnectPassword'] as String?,
-    enabled: json['enabled'] as bool? ?? false,
-    publishWhenFail: json['publishWhenFail'] as bool? ?? false,
-  );
-}
+PublishersAppstoreConnect _$PublishersAppstoreConnectFromJson(Map json) =>
+    PublishersAppstoreConnect(
+      appStoreConnectAppId: json['appStoreConnectAppId'] as String?,
+      appStoreConnectAppleId: json['appStoreConnectAppleId'] as String?,
+      appStoreConnectPassword: json['appStoreConnectPassword'] as String?,
+      enabled: json['enabled'] as bool? ?? false,
+      publishWhenFail: json['publishWhenFail'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PublishersAppstoreConnectToJson(
         PublishersAppstoreConnect instance) =>

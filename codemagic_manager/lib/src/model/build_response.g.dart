@@ -6,11 +6,9 @@ part of 'build_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BuildResponse _$BuildResponseFromJson(Map json) {
-  return BuildResponse(
-    buildId: json['buildId'] as String,
-  );
-}
+BuildResponse _$BuildResponseFromJson(Map json) => BuildResponse(
+      buildId: json['buildId'] as String,
+    );
 
 Map<String, dynamic> _$BuildResponseToJson(BuildResponse instance) =>
     <String, dynamic>{

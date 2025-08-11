@@ -21,14 +21,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  CodemagicClient client;
+  CodemagicClient? client;
   final List<Build> builds = [];
   final Map<String, Application> apps = {};
   final TextEditingController textEditingController = TextEditingController();
@@ -51,17 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(hintText: 'AuthKey'),
               ),
             ),
-            RaisedButton(
-              child: Text('Fetch builds'),
-              onPressed: onFetch,
-            ),
+            ElevatedButton(child: Text('Fetch builds'), onPressed: onFetch),
             if (builds.length > 0)
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Start latest build again'),
                 onPressed: onStart,
               ),
             if (builds.length > 0)
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Cancel latest build'),
                 onPressed: onCancel,
               ),
@@ -72,17 +69,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   final build = builds[index];
                   final app = apps[build.appId];
                   return ListTile(
-                    title: Text(build.id ?? 'no id'),
-                    subtitle: Text(
-                        '${app?.appName} | ${build.status}' ?? 'no status'),
+                    title: Text(build.id),
+                    subtitle: Text('${app?.appName} | ${build.status}'),
                     leading: app?.iconUrl?.isNotEmpty == true
                         ? ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl: app.iconUrl,
+                              imageUrl: app!.iconUrl!,
                               errorWidget: (_, __, ___) => Icon(Icons.error),
-                              placeholder: (_, __) => ColoredBox(
-                                color: Colors.grey,
-                              ),
+                              placeholder: (_, __) =>
+                                  ColoredBox(color: Colors.grey),
                             ),
                           )
                         : null,
@@ -98,10 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onStart() async {
     try {
+      if (client == null) {
+        throw Exception('CodemagicClient is not initialized');
+      }
       final appId = builds.first.appId;
-      final wId = builds.first.workflowId;
+      final wId = builds.first.workflowId!;
       final branch = builds.first.branch;
-      final result = await client.startBuild(appId, wId, branch);
+      final result = await client!.startBuild(appId, wId, branch);
       if (result.wasSuccessful) {
         print('Success!');
         onFetch();
@@ -115,8 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onCancel() async {
     try {
+      if (client == null) {
+        throw Exception('CodemagicClient is not initialized');
+      }
       final buildId = builds.first.id;
-      final result = await client.cancelBuild(buildId);
+      final result = await client!.cancelBuild(buildId);
       if (result.wasSuccessful) {
         print('Success!');
         onFetch();
@@ -134,34 +135,35 @@ class _MyHomePageState extends State<MyHomePage> {
       if (authKey.isEmpty) {
         throw 'AuthKey cannot be empty';
       }
-      client = CodemagicClient(
+      client ??= CodemagicClient(
         apiUrl: 'https://api.codemagic.io',
         authKey: authKey,
       );
-      final result = await client.getBuilds();
+      final result = await client!.getBuilds();
       if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data.applications.length}'
-            ' apps and ${result.data.builds.length} builds');
+        print(
+          'Success! Fetched ${result.data?.applications.length}'
+          ' apps and ${result.data?.builds.length} builds',
+        );
         builds.clear();
-        builds.addAll(result.data.builds);
+        builds.addAll(result.data?.builds ?? []);
         apps.clear();
         final appIds = builds.map((e) => e.appId).toSet();
-        await appIds.forEach(fetchApp);
+        for (final id in appIds) {
+          final app = await client!.getApplication(id);
+          if (app.wasSuccessful) {
+            apps[id] = app.data!;
+          } else {
+            print('Failed to fetch app for id $id: ${app.error}');
+          }
+        }
+
         setState(() {});
       } else {
         print('Something went wrong: ${result.error}');
       }
     } catch (e) {
       print(e);
-    }
-  }
-
-  void fetchApp(String id) async {
-    final app = await client.getApplication(id);
-    if (app.wasSuccessful) {
-      print('Fetched app for id $id');
-      apps[id] = app.data;
-      setState(() {});
     }
   }
 }

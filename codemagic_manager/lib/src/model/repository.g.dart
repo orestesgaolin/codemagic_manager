@@ -6,19 +6,17 @@ part of 'repository.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Repository _$RepositoryFromJson(Map json) {
-  return Repository(
-    defaultBranch: json['defaultBranch'] as String,
-    htmlUrl: json['htmlUrl'] as String,
-    id: Repository.idFromJson(json['id']),
-    isAuthenticationEnabled: json['isAuthenticationEnabled'] as bool,
-    owner: Owner.fromJson(Map<String, dynamic>.from(json['owner'] as Map)),
-    provider: json['provider'] as String,
-    language: json['language'] as String?,
-    publicSshKey: json['publicSshKey'] as String?,
-    username: json['username'] as String?,
-  );
-}
+Repository _$RepositoryFromJson(Map json) => Repository(
+      defaultBranch: json['defaultBranch'] as String,
+      htmlUrl: json['htmlUrl'] as String,
+      id: Repository.idFromJson(json['id']),
+      isAuthenticationEnabled: json['isAuthenticationEnabled'] as bool,
+      owner: Owner.fromJson(Map<String, dynamic>.from(json['owner'] as Map)),
+      provider: json['provider'] as String,
+      language: json['language'] as String?,
+      publicSshKey: json['publicSshKey'] as String?,
+      username: json['username'] as String?,
+    );
 
 Map<String, dynamic> _$RepositoryToJson(Repository instance) =>
     <String, dynamic>{

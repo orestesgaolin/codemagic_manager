@@ -6,18 +6,16 @@ part of 'code_signing_android.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CodeSigningAndroid _$CodeSigningAndroidFromJson(Map json) {
-  return CodeSigningAndroid(
-    enabled: json['enabled'] as bool,
-    keyAlias: json['keyAlias'] as String?,
-    keyPassword: json['keyPassword'] as String?,
-    keystore: json['keystore'] == null
-        ? null
-        : CodeSigningKeystore.fromJson(
-            Map<String, dynamic>.from(json['keystore'] as Map)),
-    keystorePassword: json['keystorePassword'] as String?,
-  );
-}
+CodeSigningAndroid _$CodeSigningAndroidFromJson(Map json) => CodeSigningAndroid(
+      enabled: json['enabled'] as bool,
+      keyAlias: json['keyAlias'] as String?,
+      keyPassword: json['keyPassword'] as String?,
+      keystore: json['keystore'] == null
+          ? null
+          : CodeSigningKeystore.fromJson(
+              Map<String, dynamic>.from(json['keystore'] as Map)),
+      keystorePassword: json['keystorePassword'] as String?,
+    );
 
 Map<String, dynamic> _$CodeSigningAndroidToJson(CodeSigningAndroid instance) =>
     <String, dynamic>{
