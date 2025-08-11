@@ -28,15 +28,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      #   - name: Set up Node.js
-      #     uses: actions/setup-node@v4
-      #     with:
-      #       node-version: "20"
-      #       cache: "npm"
-
-      #   - name: Install JavaScript dependencies
-      #     run: npm ci
-
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "stable"
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
