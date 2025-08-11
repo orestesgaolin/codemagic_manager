@@ -1,19 +1,149 @@
 name: codemagic_manager
 description: Package allowing to query Codemagic builds and applications from
   the recently exposed API
-version: 0.3.0+1
+version: 0.4.0+1
 homepage: https://roszkowski.dev
 issue_tracker: https://github.com/orestesgaolin/codemagic_manager/issues
 repository: https://github.com/orestesgaolin/codemagic_manager
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
-  json_annotation: ^4.0.0
-  meta: ^1.3.0
+  json_annotation: ^4.9.0
+  retrofit: ^4.7.1
 
 dev_dependencies:
-  build_runner: ^2.0.3
-  json_serializable: ^4.1.1
-  test: ^1.17.4
+  build_runner: ^2.6.0
+  retrofit_generator: ^10.0.1
+  json_serializable: ^6.10.0
+  swagger_parser: ^1.28.0
+  test: ^1.26.3
+
+swagger_parser:
+  # You must provide the file path and/or url to the OpenApi schema.
+
+  # Sets the OpenApi schema path directory for api definition.
+  schema_path: codemagic_open_api.json
+
+  # Required. Sets output directory for generated files (Clients and DTOs).
+  output_directory: lib/src/
+
+  # Optional. Set API name for folder and export file
+  # If not specified, the file name is used.
+  name: Codemagic
+
+  # Optional. Sets the programming language.
+  # Current available languages are: dart, kotlin.
+  language: dart
+
+  # Optional (dart only).
+  # Current available serializers are: json_serializable, freezed, dart_mappable.
+  json_serializer: json_serializable
+
+  # Optional. Set default content-type for all requests.
+  default_content_type: "application/json"
+
+  # Optional (dart only).
+  # Support @Extras annotation for interceptors.
+  # If the value is 'true', then the annotation will be added to all requests.
+  extras_parameter_by_default: false
+
+  # Optional (dart only).
+  # Support @DioOptions annotation for interceptors.
+  # If the value is 'true', then the annotation will be added to all requests.
+  dio_options_parameter_by_default: false
+
+  # Optional (dart only). Set 'true' to generate root client
+  # with interface and all clients instances.
+  root_client: true
+
+  # Optional (dart only). Set root client name.
+  root_client_name: CodemagicApiClient
+
+  # Optional (dart only). Set 'true' to generate export file.
+  export_file: true
+
+  # Optional. Set to 'true' to put the all api in its folder.
+  put_in_folder: false
+
+  # Optional. Set 'true' to put all clients in clients folder.
+  put_clients_in_folder: false
+
+  # Optional. Set to 'true' to squash all clients in one client.
+  merge_clients: true
+
+  # Optional. Set postfix for Client class and file.
+  client_postfix: Client
+
+  # Optional. Set 'true' to use only the endpoint path for the method name.
+  # Set 'false' to use operationId
+  path_method_name: false
+
+  # Optional (dart only). Set 'true' to include toJson() in enums.
+  # If set to false, serialization will use .name instead.
+  enums_to_json: true
+
+  # Optional. Set 'true' to set enum prefix from parent component.
+  enums_parent_prefix: true
+
+  # Optional (dart only). Set 'true' to maintain backwards compatibility
+  # when adding new values on the backend.
+  unknown_enum_value: true
+
+  # Optional. Set 'false' to not put a comment at the beginning of the generated files.
+  mark_files_as_generated: true
+
+  # Optional (dart only). Set 'true' to wrap all request return types with HttpResponse.
+  original_http_response: false
+
+  # Optional. Set regex replacement rules for the names of the generated classes/enums.
+  # All rules are applied in order.
+  # replacement_rules:
+  #   # Example of rule
+  #   - pattern: "[0-9]+"
+  #     replacement: ""
+
+  # Optional. Skip parameters with names.
+  # skipped_parameters:
+  #   - "X-Some-Token"
+
+  # Optional (dart & freezed only). Set 'true' to use Freezed 3.x code generation syntax.
+  # Set 'false' to maintain compatibility with Freezed 2.x.
+  use_freezed3: false
+
+  # Optional (dart & freezed only). Set string value to use fallbackUnion parameter when using Freezed annotation.
+  # When set to a string value, adds fallbackUnion: <value> to the @Freezed annotation.
+  # When not set (null) or empty, the @Freezed annotation has no fallbackUnion parameter.
+  # Examples: "unknown"
+  # Default: "" (no fallbackUnion parameter)
+  # fallback_union: ""
+
+  # DART ONLY
+  # Optional. Set `true` to use MultipartFile instead of File as argument type for file parameters.
+  use_multipart_file: false
+
+  # DART ONLY
+  # Optional. Set tags to be excluded on endpoint generation.
+  #
+  # Endpoints with these tags will not be included in the generated clients.
+  # exclude_tags:
+  #   - "sellPet"
+
+  # DART ONLY
+  # Optional. Set tags to be included on endpoint generation.
+  #
+  # If set, only endpoints with these tags will be included in the generated clients.
+  # **NOTE: This will override the [exclude_tags] if set.**
+  # include_tags:
+  #   - "buyPet"
+
+  # DART ONLY
+  # Optional. Set fallback client name for endpoints without tags.
+  #
+  # In general the first tag of an endpoint defines in which client the
+  # endpoint will be included. If no tag is specified, the fallback client
+  # name will be used.
+
+  # defaults to 'default' which results in a client named `DefaultClient`.
+  fallback_client: "default"

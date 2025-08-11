@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,14 +29,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  CodemagicClient client;
-  final List<Build> builds = [];
-  final Map<String, Application> apps = {};
+  late final CodemagicApiClient client;
+  final List<DashboardsSchemasBuildSchema> builds = [];
+  final Map<String, DashboardsSchemasAppSchema> apps = {};
   final TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    final dio = Dio();
+    client = CodemagicApiClient(dio);
   }
 
   @override
@@ -51,17 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(hintText: 'AuthKey'),
               ),
             ),
-            RaisedButton(
-              child: Text('Fetch builds'),
-              onPressed: onFetch,
-            ),
+            ElevatedButton(child: Text('Fetch builds'), onPressed: onFetch),
             if (builds.length > 0)
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Start latest build again'),
                 onPressed: onStart,
               ),
             if (builds.length > 0)
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Cancel latest build'),
                 onPressed: onCancel,
               ),
@@ -70,19 +70,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: builds.length,
                 itemBuilder: (context, index) {
                   final build = builds[index];
-                  final app = apps[build.appId];
+                  final app = build.app;
                   return ListTile(
-                    title: Text(build.id ?? 'no id'),
-                    subtitle: Text(
-                        '${app?.appName} | ${build.status}' ?? 'no status'),
-                    leading: app?.iconUrl?.isNotEmpty == true
+                    title: Text(build.id),
+                    subtitle: Text('${app.name} | ${build.status}'),
+                    leading: app.iconUrl?.isNotEmpty == true
                         ? ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl: app.iconUrl,
+                              imageUrl: app.iconUrl!,
                               errorWidget: (_, __, ___) => Icon(Icons.error),
-                              placeholder: (_, __) => ColoredBox(
-                                color: Colors.grey,
-                              ),
+                              placeholder: (_, __) =>
+                                  ColoredBox(color: Colors.grey),
                             ),
                           )
                         : null,
@@ -98,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onStart() async {
     try {
-      final appId = builds.first.appId;
+      final appId = builds.first.;
       final wId = builds.first.workflowId;
       final branch = builds.first.branch;
       final result = await client.startBuild(appId, wId, branch);
@@ -134,14 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
       if (authKey.isEmpty) {
         throw 'AuthKey cannot be empty';
       }
-      client = CodemagicClient(
-        apiUrl: 'https://api.codemagic.io',
-        authKey: authKey,
-      );
-      final result = await client.getBuilds();
+      
+      // final result = await client.codemagic.buil();
       if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data.applications.length}'
-            ' apps and ${result.data.builds.length} builds');
+        print(
+          'Success! Fetched ${result.data.applications.length}'
+          ' apps and ${result.data.builds.length} builds',
+        );
         builds.clear();
         builds.addAll(result.data.builds);
         apps.clear();

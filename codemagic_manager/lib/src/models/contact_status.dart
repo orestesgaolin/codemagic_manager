@@ -1,0 +1,33 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, unused_import
+
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonEnum()
+enum ContactStatus {
+  @JsonValue('pending')
+  pending('pending'),
+  @JsonValue('confirmed')
+  confirmed('confirmed'),
+  @JsonValue('rejected')
+  rejected('rejected'),
+  /// Default value for all unparsed values, allows backward compatibility when adding new values on the backend.
+  $unknown(null);
+
+  const ContactStatus(this.json);
+
+  factory ContactStatus.fromJson(String json) => values.firstWhere(
+        (e) => e.json == json,
+        orElse: () => $unknown,
+      );
+
+  final String? json;
+
+  String? toJson() => json;
+
+  @override
+  String toString() => json ?? super.toString();
+  /// Returns all defined enum values excluding the $unknown value.
+  static List<ContactStatus> get $valuesDefined => values.where((value) => value != $unknown).toList();
+}

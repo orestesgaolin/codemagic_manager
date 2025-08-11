@@ -1,0 +1,5638 @@
+{
+  "info": {
+    "title": "Codemagic API",
+    "version": "v3.0",
+    "description": "\n## Rate limits for the REST API\n\nCodemagic limits the number of REST API requests that you can make within a specific amount of time.\nThis limit helps prevent abuse and denial-of-service attacks, and ensures that the API remains available for all users.\n\nYou can use a personal API key to make API requests. All of these requests count towards your personal rate limit of\n5,000 requests per hour.\n\nIf you exceed your rate limit, you will receive a `429` response, and the `ratelimit-remaining` header will be `0`.\nYou should not retry your request until after the time specified by the `ratelimit-reset` header.\n\n### Checking the status of your rate limit\n\nYou can use the headers that are sent with each response to determine the current status of your rate limit.\n\n| **Header** | **Description** |\n| ---    | ---         |\n| ratelimit-limit | The maximum number of requests that you can make per hour. |\n| ratelimit-remaining | The number of requests remaining in the current rate limit window. |\n| ratelimit-reset | The number of seconds remaining until the current rate limit window resets. |\n\n## Help and support\n\n- Ask our [GitHub community](https://github.com/codemagic-ci-cd/codemagic-docs/discussions).\n- Our paying customers can get in touch with us via the in-app chat widget.\n  You have to be logged in to see the chat icon (note that some ad blockers may block the chat widget).\n\n---\n&copy; Nevercode Ltd. | All Rights Reserved | Codemagic is registered trademark of Nevercode Ltd. | [Terms](https://codemagic.io/terms)\n"
+  },
+  "openapi": "3.1.0",
+  "servers": [
+    {
+      "url": "https://codemagic.io/",
+      "x-internal": false
+    }
+  ],
+  "paths": {
+    "/api/v3/apps/{app_id}/tester-groups": {
+      "get": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "List tester groups for the app",
+        "operationId": "ApiV3AppsAppIdTesterGroupsGetTesterGroups",
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.apps.schemas.TesterGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Create tester group for the app",
+        "operationId": "ApiV3AppsAppIdTesterGroupsCreateTesterGroup",
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTesterGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.apps.schemas.TesterGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/apps/{app_id}/variable-groups": {
+      "get": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "List variable groups for the app",
+        "operationId": "ApiV3AppsAppIdVariableGroupsGetVariableGroups",
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.apps.schemas.VariableGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Create a variable group for the app",
+        "operationId": "ApiV3AppsAppIdVariableGroupsCreateVariableGroup",
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/apps_schemas_CreateVariableGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.apps.schemas.VariableGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/builds/{build_id}/preview": {
+      "post": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "Start an app preview",
+        "operationId": "ApiV3BuildsBuildIdPreviewStartPreview",
+        "parameters": [
+          {
+            "name": "build_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartPreviewSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.builds.schemas.StartedAppPreviewSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "The maximum number of preview sessions has been reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequiredSchema"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/dashboards/{uuid}/builds": {
+      "get": {
+        "tags": [
+          "Build Dashboards"
+        ],
+        "summary": "List dashboard builds",
+        "operationId": "ApiV3DashboardsUuidBuildsGetBuilds",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "A unique identifier after which the results should be returned."
+            },
+            "description": "A unique identifier after which the results should be returned.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "\nThe response headers include a `link` header that provides URLs for fetching additional pages of results.\nThe `link` header looks something like this:\n```\nlink: <https://codemagic.io/dashboards/{uuid}/builds>; rel=\"first\", <https://codemagic.io/dashboards/{uuid}/builds?cursor=xxx>; rel=\"next\"\n```\n\n- The URL for the first page is followed by `rel=\"first\"`.\n- The URL for the next page is followed by `rel=\"next\"`.\n",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CursorPagination_bson.objectid.ObjectId_api.controllers.dashboards.schemas.BuildSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/api/v3/dashboards/{uuid}": {
+      "get": {
+        "tags": [
+          "Build Dashboards"
+        ],
+        "summary": "Get a dashboard",
+        "description": "\nFor more information, see \"[Build dashboards](https://docs.codemagic.io/knowledge-others/build-dashboards/).\"\n",
+        "operationId": "ApiV3DashboardsUuidGetDashboard",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.dashboards.schemas.DashboardSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/api/v3/meta": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Get meta information",
+        "description": "\nReturns meta information about Codemagic, including a list of using IP addresses.\n\nThese IP addresses are in [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).\nYou can use an online conversion tool to convert from CIDR notation to IP address ranges, if needed.\n\nWe make changes to our IP addresses from time to time. If you use these IP ranges we strongly encourage regular monitoring of our API.\n",
+        "operationId": "ApiV3MetaMeta",
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.meta.schemas.MetaSchema_"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/api/v3/meta/shorebird": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Get information about Shorebird integration",
+        "operationId": "ApiV3MetaShorebirdShorebird",
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.meta.schemas.ShorebirdSchema_"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/api/v3/previews/{preview_id}": {
+      "get": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "Get app preview information",
+        "operationId": "ApiV3PreviewsPreviewIdGetPreviewInformation",
+        "parameters": [
+          {
+            "name": "preview_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.previews.schemas.AppPreviewSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "Stop an app preview",
+        "operationId": "ApiV3PreviewsPreviewIdStopPreview",
+        "parameters": [
+          {
+            "name": "preview_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/previews/{preview_id}/share": {
+      "post": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "Share an app preview",
+        "description": "Create a public ID that can be used to retrieve app preview without authentication, see [`GET /shared-previews/{shared_preview_id}`](#/operations/SharedPreviewsSharedPreviewIdGetSharedPreview).",
+        "operationId": "ApiV3PreviewsPreviewIdShareSharePreview",
+        "parameters": [
+          {
+            "name": "preview_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.previews.schemas.SharedAppPreviewSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/shared-previews/{shared_preview_id}": {
+      "get": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "Get shared app preview information",
+        "description": "Get details of a publicly shared app preview. Does not require user authentication. See [`POST /previews/{preview_id}/share`](#/operations/PreviewsPreviewIdShareSharePreview) for app preview sharing.",
+        "operationId": "ApiV3SharedPreviewsSharedPreviewIdGetSharedPreview",
+        "parameters": [
+          {
+            "name": "shared_preview_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.shared_previews.schemas.SharedAppPreviewDetailsSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {}
+        ]
+      }
+    },
+    "/api/v3/subscriptions/{team_id}/features": {
+      "patch": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Update subscription features for the team",
+        "operationId": "ApiV3SubscriptionsTeamIdFeaturesUpdateFeatures",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeaturesSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/teams/{team_id}/variable-groups": {
+      "get": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "List variable groups for the team",
+        "operationId": "ApiV3TeamsTeamIdVariableGroupsGetVariableGroups",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.teams.schemas.VariableGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Create a variable group for the team",
+        "operationId": "ApiV3TeamsTeamIdVariableGroupsCreateVariableGroup",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/teams_schemas_CreateVariableGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.teams.schemas.VariableGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/teams/{team_id}/audit-log-connector": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Get Audit Log Connector settings for the team",
+        "operationId": "ApiV3TeamsTeamIdAuditLogConnectorGetAuditLogConnector",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.teams.schemas.AuditLogConnectorSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Update Audit Log Connector settings for the team",
+        "operationId": "ApiV3TeamsTeamIdAuditLogConnectorUpdateAuditLogConnector",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAuditLogConnector"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.teams.schemas.AuditLogConnectorSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Delete Audit Log Connector settings for the team",
+        "operationId": "ApiV3TeamsTeamIdAuditLogConnectorDeleteAuditLogConnector",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/teams/{team_id}/audit-log": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Download team audit log as CSV",
+        "operationId": "ApiV3TeamsTeamIdAuditLogDownloadAuditLog",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stream Response",
+            "headers": {
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "File size in bytes",
+                "required": false,
+                "deprecated": false
+              },
+              "last-modified": {
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "description": "Last modified data-time in RFC 2822 format",
+                "required": false,
+                "deprecated": false
+              },
+              "etag": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Entity tag",
+                "required": false,
+                "deprecated": false
+              }
+            },
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "contentMediaType": "application/octet-stream"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/teams/{team_id}/previews": {
+      "get": {
+        "tags": [
+          "App Previews"
+        ],
+        "summary": "List app previews for the team",
+        "operationId": "ApiV3TeamsTeamIdPreviewsGetAppPreviews",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.teams.schemas.AppPreviewSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/teams/{team_id}/apps": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List apps for the team",
+        "operationId": "ApiV3TeamsTeamIdAppsGetApps",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.teams.schemas.AppSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/tester-groups/{tester_group_id}/contacts": {
+      "get": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "List contacts for the tester group",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdContactsListContacts",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.tester_groups.schemas.TesterGroupContactSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Bulk import contacts to the tester group",
+        "description": "\n<!-- theme: warning -->\n> The bulk import API is not designed to sync updates in real-time from an external database.\n\n### Skipped contacts\n\nContacts must meet all the following criteria in order to be created or updated with this API:\n\n- The imported contacts may not exceed your account limit.\n- The contact must have a valid email address.\n- The contact's email address must not be on an exclusion list.\n- The contact's email must not be on a list of bounced email addresses.\n\nIf contacts do not meet all of these requirements, they will be skipped by the importer.\n",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdContactsBulkImport",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tester_groups_schemas_BulkImportSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "The maximum number of contacts has been reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentRequiredSchema"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/tester-groups/{tester_group_id}/contacts/{contact_id}": {
+      "delete": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Delete contact from the tester group",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdContactsContactIdDeleteContact",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "contact_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/tester-groups/{tester_group_id}": {
+      "get": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Get a tester group",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdGetGroup",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.tester_groups.schemas.TesterGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Delete tester group",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdDeleteGroup",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "Tester Groups"
+        ],
+        "summary": "Update a tester group",
+        "operationId": "ApiV3TesterGroupsTesterGroupIdUpdateTesterGroup",
+        "parameters": [
+          {
+            "name": "tester_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTesterGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/api-key": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get API key for the authenticated user",
+        "operationId": "ApiV3UserApiKeyGetApiKey",
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.user.schemas.ApiKeySchema_"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Revoke API key for the authenticated user",
+        "operationId": "ApiV3UserApiKeyRevokeApiKey",
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/apps": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List apps for the authenticated user",
+        "description": "To list the applications belonging to a team, see [/teams/{team_id}/apps](#/operations/TeamsTeamIdAppsGetApps)",
+        "operationId": "ApiV3UserAppsGetApps",
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.user.schemas.AppSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/notifications": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get notifications for the authenticated user",
+        "operationId": "ApiV3UserNotificationsGetNotifications",
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.user.schemas.NotificationSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/preferences": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get preferences for the authenticated user",
+        "operationId": "ApiV3UserPreferencesGetPreferences",
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.user.schemas.PreferencesSchema_"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/teams": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "List teams for the authenticated user",
+        "operationId": "ApiV3UserTeamsGetTeams",
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.user.schemas.TeamSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get authenticated user info",
+        "operationId": "ApiV3UserGetUser",
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.user.schemas.UserSchema_"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/user/track": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Track user events",
+        "operationId": "ApiV3UserTrackTrack",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackUserSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/variable-groups/{variable_group_id}/variables": {
+      "get": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "List variables for the group",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdVariablesGetVariables",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "The maximum number of results per page.",
+              "default": 30
+            },
+            "description": "The maximum number of results per page.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "The page number of the results to fetch.",
+              "default": 1
+            },
+            "description": "The page number of the results to fetch.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Search query to filter variables."
+            },
+            "description": "Search query to filter variables.",
+            "required": false,
+            "deprecated": false,
+            "allowEmptyValue": false,
+            "allowReserved": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassicPagination_api.controllers.variable_groups.schemas.EnvironmentVariableSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Bulk import variables to the group",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdVariablesBulkImport",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/variable_groups_schemas_BulkImportSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Document created, URL follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/variable-groups/{variable_group_id}": {
+      "get": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Get group information",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdGetGroup",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.variable_groups.schemas.VariableGroupSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Delete the group and all variables",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdDeleteGroup",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Change group name and settings",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdUpdateGroup",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/api/v3/variable-groups/{variable_group_id}/variables/{variable_id}": {
+      "get": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Get a variable from the group",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdVariablesVariableIdGetVariable",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "variable_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request fulfilled, document follows",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoPagination_api.controllers.variable_groups.schemas.EnvironmentVariableSchema_"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Delete the variable",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdVariablesVariableIdDeleteVariable",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "variable_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "Secrets and Environment Vars"
+        ],
+        "summary": "Update the variable",
+        "operationId": "ApiV3VariableGroupsVariableGroupIdVariablesVariableIdUpdateVariable",
+        "parameters": [
+          {
+            "name": "variable_group_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          },
+          {
+            "name": "variable_id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "60a0b1c2d3e4f56789abcdef"
+              ]
+            },
+            "required": true,
+            "deprecated": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEnvironmentVariableSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Request fulfilled, nothing follows",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad request syntax or unsupported method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "extra": {
+                      "additionalProperties": {},
+                      "type": [
+                        "null",
+                        "object",
+                        "array"
+                      ]
+                    }
+                  },
+                  "type": "object",
+                  "required": [
+                    "detail",
+                    "status_code"
+                  ],
+                  "description": "Validation Exception",
+                  "examples": [
+                    {
+                      "status_code": 400,
+                      "detail": "Bad Request",
+                      "extra": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiKeySchema": {
+        "properties": {
+          "api_key": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "title": "ApiKeySchema"
+      },
+      "AppPreviewApplicationSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AppPreviewApplicationSchema"
+      },
+      "ArtifactType": {
+        "type": "string",
+        "enum": [
+          "aab",
+          "aar",
+          "apk",
+          "app",
+          "bundle",
+          "coverage_binary",
+          "coverage_data",
+          "device_recording",
+          "directory",
+          "dsym",
+          "flutter_drive_log",
+          "flutter_web_build_dir",
+          "glob_matched",
+          "ios_uitest_package",
+          "ios_xctest_package",
+          "ipa",
+          "jar",
+          "lint_result",
+          "linux_app",
+          "log",
+          "logcat",
+          "msix",
+          "pkg",
+          "proguard_map",
+          "ios_simulator_log",
+          "snap",
+          "static_lib",
+          "sylph_artefact_dir",
+          "test_results_bundle",
+          "windows_exe",
+          "xcarchive",
+          "xcodebuild_log"
+        ],
+        "title": "ArtifactType"
+      },
+      "AuditLogConnectorSchema": {
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "aws_bucket_name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "aws_access_key_id": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_sync_message": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "AuditLogConnectorSchema"
+      },
+      "BuildStatus": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "preparing",
+          "fetching",
+          "testing",
+          "building",
+          "publishing",
+          "finishing",
+          "finished",
+          "failed",
+          "canceled",
+          "timeout",
+          "skipped"
+        ],
+        "title": "BuildStatus"
+      },
+      "ClassicPagination_api.controllers.apps.schemas.TesterGroupSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/apps_schemas_TesterGroupSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[TesterGroupSchema]"
+      },
+      "ClassicPagination_api.controllers.apps.schemas.VariableGroupSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/apps_schemas_VariableGroupSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[VariableGroupSchema]"
+      },
+      "ClassicPagination_api.controllers.teams.schemas.AppPreviewSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/teams_schemas_AppPreviewSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[AppPreviewSchema]"
+      },
+      "ClassicPagination_api.controllers.teams.schemas.AppSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/teams_schemas_AppSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[AppSchema]"
+      },
+      "ClassicPagination_api.controllers.teams.schemas.VariableGroupSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/teams_schemas_VariableGroupSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[VariableGroupSchema]"
+      },
+      "ClassicPagination_api.controllers.tester_groups.schemas.TesterGroupContactSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TesterGroupContactSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[TesterGroupContactSchema]"
+      },
+      "ClassicPagination_api.controllers.user.schemas.AppSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/user_schemas_AppSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[AppSchema]"
+      },
+      "ClassicPagination_api.controllers.user.schemas.NotificationSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/NotificationSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[NotificationSchema]"
+      },
+      "ClassicPagination_api.controllers.user.schemas.TeamSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TeamSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[TeamSchema]"
+      },
+      "ClassicPagination_api.controllers.variable_groups.schemas.EnvironmentVariableSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/EnvironmentVariableSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "current_page": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "data",
+          "page_size",
+          "total_pages"
+        ],
+        "title": "ClassicPagination[EnvironmentVariableSchema]"
+      },
+      "ClientEvent": {
+        "type": "string",
+        "enum": [
+          "Onboarding Viewed",
+          "Onboarding Started",
+          "Onboarding Finished",
+          "Onboarding Info Provided",
+          "Onboarding Billing Submitted",
+          "Onboarding Billing Enabled",
+          "Onboarding Billing Selected",
+          "Onboarding Redirected"
+        ],
+        "title": "ClientEvent"
+      },
+      "CommitSchema": {
+        "properties": {
+          "hash": {
+            "type": "string"
+          },
+          "avatar_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "author_name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "hash"
+        ],
+        "title": "CommitSchema"
+      },
+      "ContactStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "confirmed",
+          "rejected"
+        ],
+        "title": "ContactStatus"
+      },
+      "CreateTesterGroup": {
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CreateTesterGroup"
+      },
+      "CursorPagination_bson.objectid.ObjectId_api.controllers.dashboards.schemas.BuildSchema_": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/dashboards_schemas_BuildSchema"
+            },
+            "type": "array"
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "cursor": {
+            "oneOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "page_size"
+        ],
+        "title": "CursorPagination[ObjectId, BuildSchema]"
+      },
+      "DashboardSchema": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "uuid"
+        ],
+        "title": "DashboardSchema"
+      },
+      "EnvironmentVariableSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "secure": {
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "secure"
+        ],
+        "title": "EnvironmentVariableSchema"
+      },
+      "ExtraSchema": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "limit"
+        ],
+        "title": "ExtraSchema"
+      },
+      "FeaturesSchema": {
+        "properties": {
+          "app_preview": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [],
+        "title": "FeaturesSchema"
+      },
+      "MetaSchema": {
+        "properties": {
+          "address_prefixes": {
+            "items": {
+              "type": "string",
+              "format": "ipv4"
+            },
+            "type": "array",
+            "description": "A list of IP blocks used by build machines to clone the Git repository. Whitelist these IP blocks if your repository is behind a firewall. For more information, see [Firewall configuration for privately hosted repositories](https://docs.codemagic.io/getting-started/adding-apps/#firewall-configuration-for-privately-hosted-repositories)."
+          },
+          "simulator_address_prefixes": {
+            "items": {
+              "type": "string",
+              "format": "ipv4"
+            },
+            "type": "array",
+            "description": "A list of IP blocks used by your Android and iOS apps to make network requests. Whitelist these IP blocks if your backend behind a firewall. For more information, see [Previewing apps in the browser](https://docs.codemagic.io/yaml-testing/app-preview/)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "address_prefixes",
+          "simulator_address_prefixes"
+        ],
+        "title": "MetaSchema"
+      },
+      "NewEnvironmentVariableSchema": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "NewEnvironmentVariableSchema"
+      },
+      "NoPagination_api.controllers.apps.schemas.TesterGroupSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/apps_schemas_TesterGroupSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[TesterGroupSchema]"
+      },
+      "NoPagination_api.controllers.apps.schemas.VariableGroupSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/apps_schemas_VariableGroupSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[VariableGroupSchema]"
+      },
+      "NoPagination_api.controllers.builds.schemas.StartedAppPreviewSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/StartedAppPreviewSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[StartedAppPreviewSchema]"
+      },
+      "NoPagination_api.controllers.dashboards.schemas.DashboardSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/DashboardSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[DashboardSchema]"
+      },
+      "NoPagination_api.controllers.meta.schemas.MetaSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/MetaSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[MetaSchema]"
+      },
+      "NoPagination_api.controllers.meta.schemas.ShorebirdSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ShorebirdSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[ShorebirdSchema]"
+      },
+      "NoPagination_api.controllers.previews.schemas.AppPreviewSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/previews_schemas_AppPreviewSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[AppPreviewSchema]"
+      },
+      "NoPagination_api.controllers.previews.schemas.SharedAppPreviewSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SharedAppPreviewSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[SharedAppPreviewSchema]"
+      },
+      "NoPagination_api.controllers.shared_previews.schemas.SharedAppPreviewDetailsSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SharedAppPreviewDetailsSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[SharedAppPreviewDetailsSchema]"
+      },
+      "NoPagination_api.controllers.teams.schemas.AuditLogConnectorSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AuditLogConnectorSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[AuditLogConnectorSchema]"
+      },
+      "NoPagination_api.controllers.teams.schemas.VariableGroupSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/teams_schemas_VariableGroupSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[VariableGroupSchema]"
+      },
+      "NoPagination_api.controllers.tester_groups.schemas.TesterGroupSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/tester_groups_schemas_TesterGroupSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[TesterGroupSchema]"
+      },
+      "NoPagination_api.controllers.user.schemas.ApiKeySchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ApiKeySchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[ApiKeySchema]"
+      },
+      "NoPagination_api.controllers.user.schemas.PreferencesSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PreferencesSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[PreferencesSchema]"
+      },
+      "NoPagination_api.controllers.user.schemas.UserSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/UserSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[UserSchema]"
+      },
+      "NoPagination_api.controllers.variable_groups.schemas.EnvironmentVariableSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EnvironmentVariableSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[EnvironmentVariableSchema]"
+      },
+      "NoPagination_api.controllers.variable_groups.schemas.VariableGroupSchema_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/variable_groups_schemas_VariableGroupSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "NoPagination[VariableGroupSchema]"
+      },
+      "NotificationCategory": {
+        "type": "string",
+        "enum": [
+          "news1"
+        ],
+        "title": "NotificationCategory"
+      },
+      "NotificationSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "category": {
+            "$ref": "#/components/schemas/NotificationCategory"
+          },
+          "body_text": {
+            "type": "string"
+          },
+          "cta_text": {
+            "type": "string"
+          },
+          "cta_action": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body_text",
+          "category",
+          "cta_action",
+          "cta_text",
+          "id"
+        ],
+        "title": "NotificationSchema"
+      },
+      "PaymentRequiredSchema": {
+        "properties": {
+          "status_code": {
+            "type": "integer"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "extra": {
+            "$ref": "#/components/schemas/ExtraSchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail",
+          "extra",
+          "status_code"
+        ],
+        "title": "PaymentRequiredSchema"
+      },
+      "Permission": {
+        "type": "string",
+        "enum": [
+          "can_read_apps",
+          "can_read_audit_log",
+          "can_read_audit_log_connector",
+          "can_update_audit_log_connector",
+          "can_delete_audit_log_connector",
+          "can_update_team",
+          "can_delete_team",
+          "can_update_subscription",
+          "can_start_app_preview",
+          "can_read_app_preview",
+          "can_create_tester_groups",
+          "can_read_tester_groups",
+          "can_update_tester_groups",
+          "can_delete_tester_groups",
+          "can_create_tester_group_contacts",
+          "can_read_tester_group_contacts",
+          "can_delete_tester_group_contacts",
+          "can_create_app_vars",
+          "can_create_team_vars",
+          "can_create_vars",
+          "can_read_app_vars",
+          "can_read_team_vars",
+          "can_read_vars",
+          "can_update_vars",
+          "can_delete_vars"
+        ],
+        "title": "Permission"
+      },
+      "PinnedAccountSchema": {
+        "properties": {
+          "team": {
+            "type": "string",
+            "description": "Allowed values: `personal` or team ID, see [/user/teams](#/operations/UserTeamsGetTeams)"
+          },
+          "view": {
+            "$ref": "#/components/schemas/PinnedAccountView"
+          }
+        },
+        "type": "object",
+        "required": [
+          "team",
+          "view"
+        ],
+        "title": "PinnedAccountSchema"
+      },
+      "PinnedAccountView": {
+        "type": "string",
+        "enum": [
+          "full",
+          "compact"
+        ],
+        "title": "PinnedAccountView"
+      },
+      "PreferencesSchema": {
+        "properties": {
+          "pinned_accounts": {
+            "items": {
+              "$ref": "#/components/schemas/PinnedAccountSchema"
+            },
+            "type": "array"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/Theme"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pinned_accounts",
+          "theme"
+        ],
+        "title": "PreferencesSchema"
+      },
+      "PullRequestSchema": {
+        "properties": {
+          "number": {
+            "type": "integer"
+          },
+          "source_branch": {
+            "type": "string"
+          },
+          "destination_branch": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "destination_branch",
+          "number",
+          "source_branch"
+        ],
+        "title": "PullRequestSchema"
+      },
+      "SharedAppPreviewDetailsSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "streaming_public_key": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "expires_at",
+          "id",
+          "streaming_public_key"
+        ],
+        "title": "SharedAppPreviewDetailsSchema"
+      },
+      "SharedAppPreviewSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "shared_preview_id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "shared_preview_id"
+        ],
+        "title": "SharedAppPreviewSchema"
+      },
+      "ShorebirdSchema": {
+        "properties": {
+          "flutter_versions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "For more information, see [Supported Flutter Versions](https://docs.shorebird.dev/getting-started/flutter-version/)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "flutter_versions"
+        ],
+        "title": "ShorebirdSchema"
+      },
+      "StartPreviewSchema": {
+        "properties": {
+          "artifact_path": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "artifact_path"
+        ],
+        "title": "StartPreviewSchema"
+      },
+      "StartedAppPreviewSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "expires_at",
+          "id"
+        ],
+        "title": "StartedAppPreviewSchema"
+      },
+      "TeamSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "TeamSchema"
+      },
+      "TesterGroupContactSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "confirmed_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ContactStatus"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "created_at",
+          "email",
+          "id",
+          "status"
+        ],
+        "title": "TesterGroupContactSchema"
+      },
+      "Theme": {
+        "type": "string",
+        "enum": [
+          "light",
+          "dark",
+          "system"
+        ],
+        "title": "Theme"
+      },
+      "TrackUserSchema": {
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/ClientEvent"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event",
+          "properties"
+        ],
+        "title": "TrackUserSchema"
+      },
+      "UpdateAuditLogConnector": {
+        "properties": {
+          "aws_bucket_name": {
+            "type": "string",
+            "maxLength": 63,
+            "minLength": 3
+          },
+          "aws_access_key_id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 16
+          },
+          "aws_secret_key": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 16
+          }
+        },
+        "type": "object",
+        "required": [
+          "aws_access_key_id",
+          "aws_bucket_name",
+          "aws_secret_key"
+        ],
+        "title": "UpdateAuditLogConnector"
+      },
+      "UpdateEnvironmentVariableSchema": {
+        "properties": {
+          "name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "value": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "secure": {
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [],
+        "title": "UpdateEnvironmentVariableSchema"
+      },
+      "UpdateGroupSchema": {
+        "properties": {
+          "name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "advanced_security": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/variable_groups_schemas_AdvancedSecuritySchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only for team's variable groups"
+          }
+        },
+        "type": "object",
+        "required": [],
+        "title": "UpdateGroupSchema"
+      },
+      "UpdateTesterGroup": {
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "UpdateTesterGroup"
+      },
+      "UserSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "avatar_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "permissions": {
+            "additionalProperties": {
+              "items": {
+                "$ref": "#/components/schemas/Permission"
+              },
+              "type": "array"
+            },
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "permissions"
+        ],
+        "title": "UserSchema"
+      },
+      "WorkflowSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "WorkflowSchema"
+      },
+      "apps_schemas_CreateVariableGroup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[^.$]*$"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CreateVariableGroup"
+      },
+      "apps_schemas_TesterGroupSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "created_at",
+          "id",
+          "name"
+        ],
+        "title": "TesterGroupSchema"
+      },
+      "apps_schemas_VariableGroupSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "VariableGroupSchema"
+      },
+      "dashboards_schemas_AppSchema": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "AppSchema"
+      },
+      "dashboards_schemas_ArtifactSchema": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size_in_bytes": {
+            "type": "integer"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ArtifactType"
+          },
+          "short_lived_download_url": {
+            "type": "string"
+          },
+          "version_code": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version_name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "short_lived_download_url",
+          "size_in_bytes",
+          "type"
+        ],
+        "title": "ArtifactSchema"
+      },
+      "dashboards_schemas_BuildSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "app": {
+            "$ref": "#/components/schemas/dashboards_schemas_AppSchema"
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/WorkflowSchema"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BuildStatus"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "artifacts": {
+            "items": {
+              "$ref": "#/components/schemas/dashboards_schemas_ArtifactSchema"
+            },
+            "type": "array"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "release_notes": {
+            "items": {
+              "$ref": "#/components/schemas/dashboards_schemas_ReleaseNoteSchema"
+            },
+            "type": "array"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "commit": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CommitSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "branch": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tag": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pull_request": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PullRequestSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "started_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "finished_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "app",
+          "artifacts",
+          "created_at",
+          "id",
+          "index",
+          "labels",
+          "release_notes",
+          "status",
+          "workflow"
+        ],
+        "title": "BuildSchema"
+      },
+      "dashboards_schemas_ReleaseNoteSchema": {
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "language",
+          "text"
+        ],
+        "title": "ReleaseNoteSchema"
+      },
+      "previews_schemas_AppPreviewSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "streaming_public_key": {
+            "type": "string"
+          },
+          "app": {
+            "$ref": "#/components/schemas/previews_schemas_AppSchema"
+          },
+          "build": {
+            "$ref": "#/components/schemas/previews_schemas_BuildSchema"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/previews_schemas_ArtifactSchema"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "app",
+          "artifact",
+          "build",
+          "created_at",
+          "expires_at",
+          "id",
+          "streaming_public_key"
+        ],
+        "title": "AppPreviewSchema"
+      },
+      "previews_schemas_AppSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AppSchema"
+      },
+      "previews_schemas_ArtifactSchema": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "version_code": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version_name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "path"
+        ],
+        "title": "ArtifactSchema"
+      },
+      "previews_schemas_BuildSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "release_notes": {
+            "items": {
+              "$ref": "#/components/schemas/previews_schemas_ReleaseNoteSchema"
+            },
+            "type": "array"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "labels",
+          "release_notes"
+        ],
+        "title": "BuildSchema"
+      },
+      "previews_schemas_ReleaseNoteSchema": {
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "language",
+          "text"
+        ],
+        "title": "ReleaseNoteSchema"
+      },
+      "teams_schemas_AdvancedSecuritySchema": {
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "selected_apps": {
+            "items": {},
+            "type": "array",
+            "description": "IDs of applications that can access the group's variables. Empty if advanced security is disabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "selected_apps"
+        ],
+        "title": "AdvancedSecuritySchema"
+      },
+      "teams_schemas_AppPreviewSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "streaming_public_key": {
+            "type": "string"
+          },
+          "app": {
+            "$ref": "#/components/schemas/AppPreviewApplicationSchema"
+          },
+          "build": {
+            "$ref": "#/components/schemas/teams_schemas_BuildSchema"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/teams_schemas_ArtifactSchema"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deleted_at": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "app",
+          "artifact",
+          "build",
+          "created_at",
+          "expires_at",
+          "id",
+          "streaming_public_key"
+        ],
+        "title": "AppPreviewSchema"
+      },
+      "teams_schemas_AppSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_build_id": {
+            "oneOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AppSchema"
+      },
+      "teams_schemas_ArtifactSchema": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "version_code": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version_name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "path"
+        ],
+        "title": "ArtifactSchema"
+      },
+      "teams_schemas_BuildSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "release_notes": {
+            "items": {
+              "$ref": "#/components/schemas/teams_schemas_ReleaseNoteSchema"
+            },
+            "type": "array"
+          },
+          "labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "labels",
+          "release_notes"
+        ],
+        "title": "BuildSchema"
+      },
+      "teams_schemas_CreateVariableGroup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[^.$]*$"
+          },
+          "advanced_security": {
+            "$ref": "#/components/schemas/teams_schemas_AdvancedSecuritySchema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "advanced_security",
+          "name"
+        ],
+        "title": "CreateVariableGroup"
+      },
+      "teams_schemas_ReleaseNoteSchema": {
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "language",
+          "text"
+        ],
+        "title": "ReleaseNoteSchema"
+      },
+      "teams_schemas_VariableGroupSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "VariableGroupSchema"
+      },
+      "tester_groups_schemas_BulkImportSchema": {
+        "properties": {
+          "emails": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "examples": [
+              "john.doe@example.com"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "emails"
+        ],
+        "title": "BulkImportSchema"
+      },
+      "tester_groups_schemas_TesterGroupSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "created_at",
+          "id",
+          "name"
+        ],
+        "title": "TesterGroupSchema"
+      },
+      "user_schemas_AppSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "icon_url": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_build_id": {
+            "oneOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "last_build_id",
+          "name"
+        ],
+        "title": "AppSchema"
+      },
+      "variable_groups_schemas_AdvancedSecuritySchema": {
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "selected_apps": {
+            "items": {},
+            "type": "array",
+            "description": "IDs of applications that can access the group's variables. Empty if advanced security is disabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "selected_apps"
+        ],
+        "title": "AdvancedSecuritySchema"
+      },
+      "variable_groups_schemas_BulkImportSchema": {
+        "properties": {
+          "secure": {
+            "type": "boolean"
+          },
+          "variables": {
+            "items": {
+              "$ref": "#/components/schemas/NewEnvironmentVariableSchema"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "required": [
+          "secure",
+          "variables"
+        ],
+        "title": "BulkImportSchema"
+      },
+      "variable_groups_schemas_VariableGroupSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "examples": [
+              "60a0b1c2d3e4f56789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "advanced_security": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/variable_groups_schemas_AdvancedSecuritySchema"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only for team's variable groups"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "VariableGroupSchema"
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "x-auth-token",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Applications",
+      "description": "REST API endpoints for applications.",
+      "external_docs": null
+    },
+    {
+      "name": "App Previews",
+      "description": "REST API endpoints for app previews.",
+      "external_docs": null
+    },
+    {
+      "name": "Billing",
+      "description": "REST API endpoints for billing.",
+      "external_docs": null
+    },
+    {
+      "name": "Build Dashboards",
+      "description": "REST API endpoints for build dashboards.",
+      "external_docs": null
+    },
+    {
+      "name": "Builds",
+      "description": "REST API endpoints for builds.",
+      "external_docs": null
+    },
+    {
+      "name": "Teams",
+      "description": "REST API endpoints for teams.",
+      "external_docs": null
+    },
+    {
+      "name": "Tester Groups",
+      "description": "REST API endpoints for tester groups.",
+      "external_docs": null
+    },
+    {
+      "name": "Secrets and Environment Vars",
+      "description": "REST API endpoints for environment variables.",
+      "external_docs": null
+    },
+    {
+      "name": "Users",
+      "description": "REST API endpoints for users.",
+      "external_docs": null
+    },
+    {
+      "name": "Meta",
+      "description": "REST API endpoints for meta data.",
+      "external_docs": null
+    }
+  ]
+}

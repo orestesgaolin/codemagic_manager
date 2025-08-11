@@ -14,78 +14,13 @@ Take a look at example:
 
 First of all check the official [Codemagic API docs here](https://docs.codemagic.io/rest-api/overview/). The API is in preview and may change significantly during development period.
 
-### Using the client
+### Regenerating the schema
 
-The library exposes `CodemagicClient` that is a HTTP client using `dart:io` http client to fetch and deserialize responses from Codemagic API.
+This client is generated usigng `package:swagger_parser`. To regenerate follow the official docs. Schema is located in `codemagic_open_api.json`.
 
-To initialize the client you should call:
-
-```dart
-final client = CodemagicClient(
-    authKey: 'AUTH-KEY',
-    apiUrl: 'https://api.codemagic.io',
-),
-```
-
-The `AUTH-KEY` as of now is available to get from your Codemagic account settings in **User settings > Integrations > Codemagic API > Show**.
-
-### Available methods
-
-Right now following endpoints are available
-
-**Get Builds**
-
-Object consisting of two sets of information:
-
-- list of `Application`s
-- list of `Build`s
-
-```dart
-final buildsResponse = await client.getBuilds();
-if (buildsResponse.wasSuccessful) {
-    //handle buildsResponse.data
-} else {
-    //handle buildsResponse.error
-}
-```
-
-**Get Application**
-
-Specific informations about the given `Application`.
-
-```dart
-final appsResponse = await client.getApplication('application-id');
-if (appsResponse.wasSuccessful) {
-    //handle appsResponse.data
-} else {
-    //handle appsResponse.error
-}
-```
-
-**Start build**
-
-Start build based on the `appId`, `workflowId` and desired `branch`.
-
-```dart
-final appsResponse = await client.startBuild('application-id', 'workflow-id', 'master');
-if (appsResponse.wasSuccessful) {
-    //handle appsResponse.data
-} else {
-    //handle appsResponse.error
-}
-```
-
-**Cancel build**
-
-Cancel build by its id.
-
-```dart
-final appsResponse = await client.cancelBuild('build-id');
-if (appsResponse.wasSuccessful) {
-    //handle appsResponse.data
-} else {
-    //handle appsResponse.error
-}
+```sh
+dart run swagger_parser
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 ## Work in progress

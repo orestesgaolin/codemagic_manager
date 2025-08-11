@@ -6,15 +6,16 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   codemagic_manager:
     path: ../
-  cached_network_image: ^2.4.1
-  cupertino_icons: ^1.0.1
+  cached_network_image: ^3.4.1
+  cupertino_icons: ^1.0.8
+  dio: ^5.9.0
 
 flutter:
   uses-material-design: true
