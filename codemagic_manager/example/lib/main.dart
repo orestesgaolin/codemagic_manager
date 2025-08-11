@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final appId = builds.first.appId;
       final wId = builds.first.workflowId!;
       final branch = builds.first.branch;
-      final result = await client!.startBuild(appId, wId, branch);
+      final result = await client!.startBuild(appId, wId, branch: branch);
       if (result.wasSuccessful) {
         print('Success!');
         onFetch();

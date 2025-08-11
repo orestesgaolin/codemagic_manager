@@ -20,19 +20,19 @@ void main() {
 
   test('starts build for given app id', () async {
     final client = CodemagicClient(authKey: apiKey);
-    final result = await client.startBuild(appId, workflowId, 'main');
+    final result = await client.startBuild(appId, workflowId, branch: 'main');
     print(result);
   });
 
   test('fails to start build for given app id with wrong branch', () async {
     final client = CodemagicClient(authKey: apiKey);
-    final result = await client.startBuild(appId, workflowId, 'master');
+    final result = await client.startBuild(appId, workflowId, branch: 'master');
     print(result);
   });
 
   test('starts and cancels the build for given app id', () async {
     final client = CodemagicClient(authKey: apiKey);
-    final result = await client.startBuild(appId, workflowId, 'main');
+    final result = await client.startBuild(appId, workflowId, branch: 'main');
     print(result);
     await Future.delayed(Duration(seconds: 5));
     final cancelResult = await client.cancelBuild('${result.data?.buildId}');
