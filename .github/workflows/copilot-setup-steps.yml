@@ -38,8 +38,9 @@ jobs:
           flutter-version: 3.32.8
           channel: stable
           cache: true
-          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-
 
       - name: 📦 Install Dependencies
         run: |
-          flutter pub get
+          cd codemagic_manager
+          dart pub get
