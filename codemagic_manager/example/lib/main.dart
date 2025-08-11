@@ -27,22 +27,16 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-enum ViewMode { builds, applications, artifacts, caches, teams }
+enum ViewMode { builds, applications }
 
 class _MyHomePageState extends State<MyHomePage> {
   CodemagicClient? client;
   final List<Build> builds = [];
   final Map<String, Application> apps = {};
   final List<Application> allApplications = [];
-  final List<Artifact> artifacts = [];
-  final List<Cache> caches = [];
-  final List<Team> teams = [];
-  final List<TeamMember> teamMembers = [];
   final TextEditingController textEditingController = TextEditingController();
   
   ViewMode currentView = ViewMode.builds;
-  String? selectedBuildId;
-  String? selectedTeamId;
 
   @override
   void initState() {
@@ -52,18 +46,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Codemagic Manager'),
           bottom: TabBar(
-            isScrollable: true,
             tabs: const [
               Tab(text: 'Builds'),
               Tab(text: 'Applications'),
-              Tab(text: 'Artifacts'),
-              Tab(text: 'Caches'),
-              Tab(text: 'Teams'),
             ],
             onTap: (index) {
               setState(() {
@@ -87,10 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   ElevatedButton(child: Text('Fetch builds'), onPressed: onFetch),
                   ElevatedButton(child: Text('Fetch apps'), onPressed: onFetchApplications),
-                  if (selectedBuildId != null)
-                    ElevatedButton(child: Text('Fetch artifacts'), onPressed: onFetchArtifacts),
-                  ElevatedButton(child: Text('Fetch caches'), onPressed: onFetchCaches),
-                  ElevatedButton(child: Text('Fetch teams'), onPressed: onFetchTeams),
                   if (builds.length > 0)
                     ElevatedButton(
                       child: Text('Start latest build again'),
@@ -117,12 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
         return _buildBuildsList();
       case ViewMode.applications:
         return _buildApplicationsList();
-      case ViewMode.artifacts:
-        return _buildArtifactsList();
-      case ViewMode.caches:
-        return _buildCachesList();
-      case ViewMode.teams:
-        return _buildTeamsList();
     }
   }
 
@@ -145,12 +125,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 )
               : null,
+          trailing: Icon(Icons.arrow_forward_ios),
           onTap: () {
-            setState(() {
-              selectedBuildId = build.id;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Selected build ${build.id} for artifacts')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BuildDetailsPage(
+                  build: build,
+                  application: app,
+                  client: client!,
+                ),
+              ),
             );
           },
         );
@@ -166,7 +151,13 @@ class _MyHomePageState extends State<MyHomePage> {
         return ListTile(
           title: Text(app.appName),
           subtitle: Text('ID: ${app.id}'),
-          trailing: app.archived ? Chip(label: Text('Archived')) : null,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (app.archived) Chip(label: Text('Archived')),
+              Icon(Icons.arrow_forward_ios),
+            ],
+          ),
           leading: app.iconUrl?.isNotEmpty == true
               ? ClipOval(
                   child: CachedNetworkImage(
@@ -177,72 +168,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 )
               : Icon(Icons.apps),
-        );
-      },
-    );
-  }
-
-  Widget _buildArtifactsList() {
-    if (selectedBuildId == null) {
-      return Center(
-        child: Text('Select a build from the Builds tab to view its artifacts'),
-      );
-    }
-    
-    return ListView.builder(
-      itemCount: artifacts.length,
-      itemBuilder: (context, index) {
-        final artifact = artifacts[index];
-        return ListTile(
-          title: Text(artifact.name),
-          subtitle: Text('Type: ${artifact.type} | Size: ${_formatBytes(artifact.size)}'),
-          leading: Icon(_getArtifactIcon(artifact.type)),
-          trailing: Icon(Icons.download),
-        );
-      },
-    );
-  }
-
-  Widget _buildCachesList() {
-    return ListView.builder(
-      itemCount: caches.length,
-      itemBuilder: (context, index) {
-        final cache = caches[index];
-        return ListTile(
-          title: Text(cache.label),
-          subtitle: Text('Size: ${_formatBytes(cache.size)} | Used: ${cache.usageCount} times'),
-          leading: Icon(Icons.storage),
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () => onDeleteCache(cache.id),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTeamsList() {
-    return ListView.builder(
-      itemCount: teams.length,
-      itemBuilder: (context, index) {
-        final team = teams[index];
-        return ExpansionTile(
-          title: Text(team.name),
-          subtitle: Text('${team.memberCount} members'),
-          leading: Icon(Icons.group),
-          onExpansionChanged: (expanded) {
-            if (expanded) {
-              onFetchTeamMembers(team.id);
-            }
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ApplicationDetailsPage(
+                  application: app,
+                  client: client!,
+                ),
+              ),
+            );
           },
-          children: teamMembers
-              .where((member) => selectedTeamId == team.id)
-              .map((member) => ListTile(
-                    title: Text(member.name),
-                    subtitle: Text('${member.email} | ${member.role}'),
-                    leading: Icon(Icons.person),
-                  ))
-              .toList(),
         );
       },
     );
@@ -364,100 +300,419 @@ class _MyHomePageState extends State<MyHomePage> {
       print(e);
     }
   }
+}
 
-  void onFetchArtifacts() async {
-    if (selectedBuildId == null) return;
-    
-    try {
-      if (client == null) {
-        throw Exception('CodemagicClient is not initialized');
-      }
-      final result = await client!.getArtifacts(selectedBuildId!);
-      if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data?.artifacts.length} artifacts');
-        artifacts.clear();
-        artifacts.addAll(result.data?.artifacts ?? []);
-        setState(() {});
-      } else {
-        print('Failed to fetch artifacts: ${result.error}');
-      }
-    } catch (e) {
-      print(e);
+class BuildDetailsPage extends StatefulWidget {
+  final Build build;
+  final Application? application;
+  final CodemagicClient client;
+
+  const BuildDetailsPage({
+    Key? key,
+    required this.build,
+    this.application,
+    required this.client,
+  }) : super(key: key);
+
+  @override
+  _BuildDetailsPageState createState() => _BuildDetailsPageState();
+}
+
+class _BuildDetailsPageState extends State<BuildDetailsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Build Details'),
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(16.0),
+        children: [
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Build Information', style: Theme.of(context).textTheme.headlineSmall),
+                  SizedBox(height: 16),
+                  _buildDetailRow('Build ID', widget.build.id),
+                  _buildDetailRow('Status', widget.build.status.toString()),
+                  _buildDetailRow('Branch', widget.build.branch),
+                  _buildDetailRow('Created', widget.build.createdAt.toString()),
+                  if (widget.build.startedAt != null)
+                    _buildDetailRow('Started', widget.build.startedAt.toString()),
+                  if (widget.build.finishedAt != null)
+                    _buildDetailRow('Finished', widget.build.finishedAt.toString()),
+                  if (widget.build.workflowId != null)
+                    _buildDetailRow('Workflow ID', widget.build.workflowId!),
+                  if (widget.application != null)
+                    _buildDetailRow('Application', widget.application!.appName),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          if (widget.build.artefacts.isNotEmpty) ...[
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Artifacts', style: Theme.of(context).textTheme.headlineSmall),
+                    SizedBox(height: 16),
+                    ...widget.build.artefacts.map((artifact) => 
+                      ListTile(
+                        title: Text(artifact.name ?? 'Unknown'),
+                        subtitle: Text('Type: ${artifact.type ?? 'Unknown'} | Size: ${_formatBytes(artifact.size ?? 0)}'),
+                        leading: Icon(_getArtifactIcon(artifact.type ?? '')),
+                        trailing: IconButton(
+                          icon: Icon(Icons.download),
+                          onPressed: () => _downloadArtifact(artifact),
+                        ),
+                      )
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Commit Information', style: Theme.of(context).textTheme.headlineSmall),
+                  SizedBox(height: 16),
+                  _buildDetailRow('Commit Hash', widget.build.commit.hash ?? 'Unknown'),
+                  _buildDetailRow('Message', widget.build.commit.commitMessage ?? 'No message'),
+                  _buildDetailRow('Author', widget.build.commit.authorName ?? 'Unknown'),
+                  _buildDetailRow('Email', widget.build.commit.authorEmail ?? 'Unknown'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  IconData _getArtifactIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'apk':
+      case 'aab':
+        return Icons.android;
+      case 'ipa':
+        return Icons.phone_iphone;
+      case 'dmg':
+      case 'app':
+        return Icons.computer;
+      default:
+        return Icons.file_present;
     }
   }
 
-  void onFetchCaches() async {
+  String _formatBytes(int bytes) {
+    if (bytes == 0) return '0 B';
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    int i = (bytes.bitLength - 1) ~/ 10;
+    return '${(bytes / (1 << (i * 10))).toStringAsFixed(1)} ${suffixes[i]}';
+  }
+
+  void _downloadArtifact(Artefact artifact) async {
+    // Note: This would require the artifact ID which might not be available
+    // in the current model. This is a placeholder for the functionality.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Download functionality would be implemented here')),
+    );
+  }
+}
+
+class ApplicationDetailsPage extends StatefulWidget {
+  final Application application;
+  final CodemagicClient client;
+
+  const ApplicationDetailsPage({
+    Key? key,
+    required this.application,
+    required this.client,
+  }) : super(key: key);
+
+  @override
+  _ApplicationDetailsPageState createState() => _ApplicationDetailsPageState();
+}
+
+class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> {
+  List<Build> appBuilds = [];
+  List<Cache> appCaches = [];
+  bool isLoadingBuilds = false;
+  bool isLoadingCaches = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppBuilds();
+    _loadAppCaches();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.application.appName),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Details'),
+              Tab(text: 'Builds'),
+              Tab(text: 'Caches'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildDetailsTab(),
+            _buildBuildsTab(),
+            _buildCachesTab(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailsTab() {
+    return ListView(
+      padding: EdgeInsets.all(16.0),
+      children: [
+        Card(
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    if (widget.application.iconUrl?.isNotEmpty == true)
+                      ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: widget.application.iconUrl!,
+                          width: 64,
+                          height: 64,
+                          errorWidget: (_, __, ___) => Icon(Icons.error, size: 64),
+                          placeholder: (_, __) => ColoredBox(color: Colors.grey, child: SizedBox(width: 64, height: 64)),
+                        ),
+                      )
+                    else
+                      Icon(Icons.apps, size: 64),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.application.appName,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          Text('ID: ${widget.application.id}'),
+                          if (widget.application.archived)
+                            Chip(label: Text('Archived')),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                _buildDetailRow('App ID', widget.application.id),
+                if (widget.application.repository != null)
+                  _buildDetailRow('Repository', widget.application.repository!.htmlUrl),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBuildsTab() {
+    if (isLoadingBuilds) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (appBuilds.isEmpty) {
+      return Center(child: Text('No builds found for this application'));
+    }
+
+    return ListView.builder(
+      itemCount: appBuilds.length,
+      itemBuilder: (context, index) {
+        final build = appBuilds[index];
+        return ListTile(
+          title: Text(build.id),
+          subtitle: Text('${build.status} | ${build.branch}'),
+          trailing: Text(build.createdAt.toString().split(' ')[0]),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BuildDetailsPage(
+                  build: build,
+                  application: widget.application,
+                  client: widget.client,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildCachesTab() {
+    if (isLoadingCaches) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    if (appCaches.isEmpty) {
+      return Center(child: Text('No caches found for this application'));
+    }
+
+    return ListView.builder(
+      itemCount: appCaches.length,
+      itemBuilder: (context, index) {
+        final cache = appCaches[index];
+        return ListTile(
+          title: Text(cache.label),
+          subtitle: Text('Size: ${_formatBytes(cache.size)} | Used: ${cache.usageCount} times'),
+          leading: Icon(Icons.storage),
+          trailing: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () => _deleteCache(cache.id),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes == 0) return '0 B';
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    int i = (bytes.bitLength - 1) ~/ 10;
+    return '${(bytes / (1 << (i * 10))).toStringAsFixed(1)} ${suffixes[i]}';
+  }
+
+  void _loadAppBuilds() async {
+    setState(() {
+      isLoadingBuilds = true;
+    });
+
     try {
-      if (client == null) {
-        throw Exception('CodemagicClient is not initialized');
-      }
-      final result = await client!.getCaches();
+      final result = await widget.client.getBuildsForApplication(widget.application.id);
       if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data?.caches.length} caches');
-        caches.clear();
-        caches.addAll(result.data?.caches ?? []);
-        setState(() {});
+        setState(() {
+          appBuilds = result.data?.builds ?? [];
+        });
       } else {
-        print('Failed to fetch caches: ${result.error}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load builds: ${result.error}')),
+        );
       }
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading builds: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoadingBuilds = false;
+      });
     }
   }
 
-  void onDeleteCache(String cacheId) async {
+  void _loadAppCaches() async {
+    setState(() {
+      isLoadingCaches = true;
+    });
+
     try {
-      if (client == null) {
-        throw Exception('CodemagicClient is not initialized');
-      }
-      final result = await client!.deleteCache(cacheId);
+      final result = await widget.client.getCaches(widget.application.id);
       if (result.wasSuccessful) {
-        print('Cache deleted successfully');
-        onFetchCaches(); // Refresh the list
+        setState(() {
+          appCaches = result.data ?? [];
+        });
       } else {
-        print('Failed to delete cache: ${result.error}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load caches: ${result.error}')),
+        );
       }
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading caches: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoadingCaches = false;
+      });
     }
   }
 
-  void onFetchTeams() async {
+  void _deleteCache(String cacheId) async {
     try {
-      if (client == null) {
-        throw Exception('CodemagicClient is not initialized');
-      }
-      final result = await client!.getTeams();
+      final result = await widget.client.deleteCache(widget.application.id, cacheId);
       if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data?.teams.length} teams');
-        teams.clear();
-        teams.addAll(result.data?.teams ?? []);
-        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cache deleted successfully')),
+        );
+        _loadAppCaches(); // Refresh the list
       } else {
-        print('Failed to fetch teams: ${result.error}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete cache: ${result.error}')),
+        );
       }
     } catch (e) {
-      print(e);
-    }
-  }
-
-  void onFetchTeamMembers(String teamId) async {
-    try {
-      if (client == null) {
-        throw Exception('CodemagicClient is not initialized');
-      }
-      final result = await client!.getTeamMembers(teamId);
-      if (result.wasSuccessful) {
-        print('Success! Fetched ${result.data?.members.length} team members');
-        teamMembers.clear();
-        teamMembers.addAll(result.data?.members ?? []);
-        selectedTeamId = teamId;
-        setState(() {});
-      } else {
-        print('Failed to fetch team members: ${result.error}');
-      }
-    } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting cache: $e')),
+      );
     }
   }
 }

@@ -6,7 +6,6 @@ void main() {
   const appId = 'APP_ID';
   const workflowId = 'WORKFLOW_ID';
   const buildId = 'BUILD_ID';
-  const teamId = 'TEAM_ID';
   const cacheId = 'CACHE_ID';
   const artifactId = 'ARTIFACT_ID';
 
@@ -68,56 +67,30 @@ void main() {
   });
 
   group('New Artifacts API methods', () {
-    test('returns artifacts for build', () async {
+    test('returns artifact download URL', () async {
       final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getArtifacts(buildId);
-      print('Artifacts: $result');
-    });
-
-    test('returns specific artifact', () async {
-      final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getArtifact(artifactId);
-      print('Artifact: $result');
+      final result = await client.getArtifactDownloadUrl(artifactId);
+      print('Artifact download URL: $result');
     });
   });
 
   group('New Caches API methods', () {
-    test('returns list of caches', () async {
+    test('returns list of caches for app', () async {
       final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getCaches();
+      final result = await client.getCaches(appId);
       print('Caches: $result');
     });
 
-    test('returns specific cache', () async {
+    test('returns specific cache for app', () async {
       final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getCache(cacheId);
+      final result = await client.getCache(appId, cacheId);
       print('Cache: $result');
     });
 
-    test('deletes cache', () async {
+    test('deletes cache for app', () async {
       final client = CodemagicClient(authKey: apiKey);
-      final result = await client.deleteCache(cacheId);
+      final result = await client.deleteCache(appId, cacheId);
       print('Delete cache: $result');
-    });
-  });
-
-  group('New Teams API methods', () {
-    test('returns list of teams', () async {
-      final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getTeams();
-      print('Teams: $result');
-    });
-
-    test('returns specific team', () async {
-      final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getTeam(teamId);
-      print('Team: $result');
-    });
-
-    test('returns team members', () async {
-      final client = CodemagicClient(authKey: apiKey);
-      final result = await client.getTeamMembers(teamId);
-      print('Team members: $result');
     });
   });
 }

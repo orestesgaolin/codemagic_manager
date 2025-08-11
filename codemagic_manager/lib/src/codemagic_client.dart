@@ -28,11 +28,20 @@ class CodemagicClient {
   /// associated applications. The response includes build status, timing information,
   /// and artifact details.
   /// 
+  /// Parameters:
+  /// - [limit]: Maximum number of builds to return (optional, default API limit applies)
+  /// - [offset]: Number of builds to skip for pagination (optional, default is 0)
+  /// 
   /// Returns [ApiResponse] containing [Builds] data on success, or error information
   /// on failure (e.g., 401 for invalid authentication).
-  Future<ApiResponse<Builds>> getBuilds() async {
+  Future<ApiResponse<Builds>> getBuilds({int? limit, int? offset}) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/builds"));
+      final queryParams = <String, String>{};
+      if (limit != null) queryParams['limit'] = limit.toString();
+      if (offset != null) queryParams['offset'] = offset.toString();
+      
+      final uri = Uri.parse("$apiUrl/builds").replace(queryParameters: queryParams);
+      final request = await _client.getUrl(uri);
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
@@ -55,9 +64,18 @@ class CodemagicClient {
   }
 
   /// Retrieves list of [Application]s
-  Future<ApiResponse<Applications>> getApplications() async {
+  /// 
+  /// Parameters:
+  /// - [limit]: Maximum number of applications to return (optional, default API limit applies)
+  /// - [offset]: Number of applications to skip for pagination (optional, default is 0)
+  Future<ApiResponse<Applications>> getApplications({int? limit, int? offset}) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/apps"));
+      final queryParams = <String, String>{};
+      if (limit != null) queryParams['limit'] = limit.toString();
+      if (offset != null) queryParams['offset'] = offset.toString();
+      
+      final uri = Uri.parse("$apiUrl/apps").replace(queryParameters: queryParams);
+      final request = await _client.getUrl(uri);
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
@@ -133,9 +151,19 @@ class CodemagicClient {
   }
 
   /// Retrieves builds for specific [Application] by its [appId]
-  Future<ApiResponse<Builds>> getBuildsForApplication(String appId) async {
+  /// 
+  /// Parameters:
+  /// - [appId]: The unique identifier of the application
+  /// - [limit]: Maximum number of builds to return (optional, default API limit applies)
+  /// - [offset]: Number of builds to skip for pagination (optional, default is 0)
+  Future<ApiResponse<Builds>> getBuildsForApplication(String appId, {int? limit, int? offset}) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/builds"));
+      final queryParams = <String, String>{};
+      if (limit != null) queryParams['limit'] = limit.toString();
+      if (offset != null) queryParams['offset'] = offset.toString();
+      
+      final uri = Uri.parse("$apiUrl/apps/$appId/builds").replace(queryParameters: queryParams);
+      final request = await _client.getUrl(uri);
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
@@ -237,17 +265,26 @@ class CodemagicClient {
     }
   }
 
-  /// Retrieves artifacts for specific [Build] by its [buildId]
-  Future<ApiResponse<Artifacts>> getArtifacts(String buildId) async {
+  /// Generates a public URL for downloading a specific [Artifact] by its [artifactId]
+  /// 
+  /// According to the Codemagic API documentation, each build includes a list of 
+  /// artifacts, and for each artifact you can generate a public download URL.
+  /// 
+  /// Parameters:
+  /// - [artifactId]: The unique identifier of the artifact
+  /// 
+  /// Returns [ApiResponse] containing the download URL as a string on success,
+  /// or error information on failure.
+  Future<ApiResponse<String>> getArtifactDownloadUrl(String artifactId) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/builds/$buildId/artifacts"));
+      final request = await _client.postUrl(Uri.parse("$apiUrl/artifacts/$artifactId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
         final data = await utf8.decoder.bind(response).join();
         final json = jsonDecode(data);
-        final artifacts = Artifacts.fromJson(json);
-        return ApiResponse(wasSuccessful: true, data: artifacts);
+        final url = json['url'] as String;
+        return ApiResponse(wasSuccessful: true, data: url);
       }
 
       return ApiResponse(
@@ -262,38 +299,20 @@ class CodemagicClient {
     }
   }
 
-  /// Retrieves information about specific [Artifact] by its [id]
-  Future<ApiResponse<Artifact>> getArtifact(String id) async {
+  /// Retrieves list of [Cache]s for a specific application
+  /// 
+  /// Parameters:
+  /// - [appId]: The unique identifier of the application
+  Future<ApiResponse<List<Cache>>> getCaches(String appId) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/artifacts/$id"));
+      final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
         final data = await utf8.decoder.bind(response).join();
         final json = jsonDecode(data);
-        final artifact = Artifact.fromJson(json['artifact']);
-        return ApiResponse(wasSuccessful: true, data: artifact);
-      }
-
-      return ApiResponse(
-        wasSuccessful: false,
-        error: 'Response code was ${response.statusCode}',
-      );
-    } on Exception catch (e) {
-      return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
-    }
-  }
-
-  /// Retrieves list of [Cache]s
-  Future<ApiResponse<Caches>> getCaches() async {
-    try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/caches"));
-      request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
-      final response = await request.close();
-      if (response.statusCode == HttpStatus.ok) {
-        final data = await utf8.decoder.bind(response).join();
-        final json = jsonDecode(data);
-        final caches = Caches.fromJson(json);
+        final cachesList = json['caches'] as List;
+        final caches = cachesList.map((cache) => Cache.fromJson(cache)).toList();
         return ApiResponse(wasSuccessful: true, data: caches);
       }
 
@@ -309,10 +328,14 @@ class CodemagicClient {
     }
   }
 
-  /// Retrieves information about specific [Cache] by its [id]
-  Future<ApiResponse<Cache>> getCache(String id) async {
+  /// Retrieves information about specific [Cache] by its [id] for a specific application
+  /// 
+  /// Parameters:
+  /// - [appId]: The unique identifier of the application
+  /// - [cacheId]: The unique identifier of the cache
+  Future<ApiResponse<Cache>> getCache(String appId, String cacheId) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/caches/$id"));
+      final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       if (response.statusCode == HttpStatus.ok) {
@@ -331,10 +354,14 @@ class CodemagicClient {
     }
   }
 
-  /// Deletes [Cache] by its [id]
-  Future<ApiResponse<bool>> deleteCache(String id) async {
+  /// Deletes [Cache] by its [cacheId] for a specific application
+  /// 
+  /// Parameters:
+  /// - [appId]: The unique identifier of the application
+  /// - [cacheId]: The unique identifier of the cache
+  Future<ApiResponse<bool>> deleteCache(String appId, String cacheId) async {
     try {
-      final request = await _client.deleteUrl(Uri.parse("$apiUrl/caches/$id"));
+      final request = await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
       
@@ -352,75 +379,4 @@ class CodemagicClient {
     }
   }
 
-  /// Retrieves list of [Team]s
-  Future<ApiResponse<Teams>> getTeams() async {
-    try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/teams"));
-      request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
-      final response = await request.close();
-      if (response.statusCode == HttpStatus.ok) {
-        final data = await utf8.decoder.bind(response).join();
-        final json = jsonDecode(data);
-        final teams = Teams.fromJson(json);
-        return ApiResponse(wasSuccessful: true, data: teams);
-      }
-
-      return ApiResponse(
-        wasSuccessful: false,
-        error: 'Response code was ${response.statusCode}',
-      );
-    } on HttpException catch (e) {
-      return ApiResponse(
-          wasSuccessful: false, error: 'HTTP error: ${e.message}');
-    } catch (e) {
-      return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
-    }
-  }
-
-  /// Retrieves information about specific [Team] by its [id]
-  Future<ApiResponse<Team>> getTeam(String id) async {
-    try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/teams/$id"));
-      request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
-      final response = await request.close();
-      if (response.statusCode == HttpStatus.ok) {
-        final data = await utf8.decoder.bind(response).join();
-        final json = jsonDecode(data);
-        final team = Team.fromJson(json['team']);
-        return ApiResponse(wasSuccessful: true, data: team);
-      }
-
-      return ApiResponse(
-        wasSuccessful: false,
-        error: 'Response code was ${response.statusCode}',
-      );
-    } on Exception catch (e) {
-      return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
-    }
-  }
-
-  /// Retrieves list of [TeamMember]s for specific [Team] by its [teamId]
-  Future<ApiResponse<TeamMembers>> getTeamMembers(String teamId) async {
-    try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/teams/$teamId/members"));
-      request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
-      final response = await request.close();
-      if (response.statusCode == HttpStatus.ok) {
-        final data = await utf8.decoder.bind(response).join();
-        final json = jsonDecode(data);
-        final teamMembers = TeamMembers.fromJson(json);
-        return ApiResponse(wasSuccessful: true, data: teamMembers);
-      }
-
-      return ApiResponse(
-        wasSuccessful: false,
-        error: 'Response code was ${response.statusCode}',
-      );
-    } on HttpException catch (e) {
-      return ApiResponse(
-          wasSuccessful: false, error: 'HTTP error: ${e.message}');
-    } catch (e) {
-      return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
-    }
-  }
 }
