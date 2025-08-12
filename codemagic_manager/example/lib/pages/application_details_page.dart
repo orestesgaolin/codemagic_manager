@@ -1,6 +1,8 @@
 import 'package:codemagic_manager/codemagic_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/builds_provider.dart';
 import '../widgets/build_card.dart';
 import 'build_details_page.dart';
 import 'cache_management_page.dart';
@@ -21,11 +23,7 @@ class ApplicationDetailsPage extends StatefulWidget {
 
 class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Build> _builds = [];
-  bool _isLoadingBuilds = false;
-  int _skip = 0;
-  final int _limit = 20;
-  bool _hasMoreBuilds = true;
+  late BuildsProvider _buildsProvider;
 
   final ScrollController _buildsScrollController = ScrollController();
 
@@ -33,6 +31,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with Si
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _buildsProvider = BuildsProvider(widget.client);
     _loadBuilds();
     _buildsScrollController.addListener(_onScroll);
   }
@@ -41,104 +40,72 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with Si
   void dispose() {
     _tabController.dispose();
     _buildsScrollController.dispose();
+    _buildsProvider.dispose();
     super.dispose();
   }
 
   void _onScroll() {
     if (_buildsScrollController.position.pixels == _buildsScrollController.position.maxScrollExtent &&
-        !_isLoadingBuilds &&
-        _hasMoreBuilds) {
+        !_buildsProvider.isLoading &&
+        _buildsProvider.hasMoreBuilds) {
       _loadMoreBuilds();
     }
   }
 
   Future<void> _loadBuilds() async {
-    if (_isLoadingBuilds) return;
-
-    setState(() => _isLoadingBuilds = true);
-
     try {
-      final result = await widget.client.getBuilds(
+      await _buildsProvider.loadBuilds(
         appId: widget.application.id,
-        skip: 0,
+        refresh: true,
       );
-
-      if (result.wasSuccessful && result.data != null) {
-        setState(() {
-          _builds = result.data!.builds;
-          _skip = _builds.length;
-          _hasMoreBuilds = _builds.length >= _limit;
-        });
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error loading builds: $e')),
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoadingBuilds = false);
-      }
     }
   }
 
   Future<void> _loadMoreBuilds() async {
-    if (_isLoadingBuilds || !_hasMoreBuilds) return;
-
-    setState(() => _isLoadingBuilds = true);
-
     try {
-      final result = await widget.client.getBuilds(
-        appId: widget.application.id,
-        skip: _skip,
-      );
-
-      if (result.wasSuccessful && result.data != null) {
-        final newBuilds = result.data!.builds;
-        setState(() {
-          _builds.addAll(newBuilds);
-          _skip = _builds.length;
-          _hasMoreBuilds = newBuilds.length >= _limit;
-        });
-      }
+      await _buildsProvider.loadMoreBuilds();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error loading more builds: $e')),
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoadingBuilds = false);
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.application.appName),
-        bottom: TabBar(
+    return ChangeNotifierProvider<BuildsProvider>.value(
+      value: _buildsProvider,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.application.appName),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Details', icon: Icon(Icons.info)),
+              Tab(text: 'Builds', icon: Icon(Icons.build)),
+              Tab(text: 'Cache', icon: Icon(Icons.storage)),
+            ],
+          ),
+        ),
+        body: TabBarView(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Details', icon: Icon(Icons.info)),
-            Tab(text: 'Builds', icon: Icon(Icons.build)),
-            Tab(text: 'Cache', icon: Icon(Icons.storage)),
+          children: [
+            _buildDetailsTab(),
+            _buildBuildsTab(),
+            CacheManagementPage(
+              appId: widget.application.id,
+              client: widget.client,
+            ),
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildDetailsTab(),
-          _buildBuildsTab(),
-          CacheManagementPage(
-            appId: widget.application.id,
-            client: widget.client,
-          ),
-        ],
       ),
     );
   }
@@ -198,40 +165,57 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with Si
   }
 
   Widget _buildBuildsTab() {
-    return RefreshIndicator(
-      onRefresh: _loadBuilds,
-      child: ListView.builder(
-        controller: _buildsScrollController,
-        padding: const EdgeInsets.all(16),
-        itemCount: _builds.length + (_isLoadingBuilds ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= _builds.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+    return Consumer<BuildsProvider>(
+      builder: (context, provider, child) {
+        final builds = provider.builds;
+        final isLoading = provider.isLoading;
 
-          final build = _builds[index];
-          return BuildCard(
-            buildData: build,
-            application: widget.application,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => BuildDetailsPage(
-                    build: build,
-                    application: widget.application,
-                    client: widget.client,
+        return RefreshIndicator(
+          onRefresh: () async {
+            try {
+              await provider.refresh();
+            } catch (e) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error refreshing builds: $e')),
+                );
+              }
+            }
+          },
+          child: ListView.builder(
+            controller: _buildsScrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: builds.length + (isLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index >= builds.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(),
                   ),
-                ),
+                );
+              }
+
+              final build = builds[index];
+              return BuildCard(
+                buildData: build,
+                application: widget.application,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BuildDetailsPage(
+                        build: build,
+                        application: widget.application,
+                        client: widget.client,
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

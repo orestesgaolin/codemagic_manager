@@ -1,8 +1,11 @@
 import 'package:codemagic_manager/codemagic_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'pages/application_details_page.dart';
 import 'pages/build_details_page.dart';
+import 'providers/builds_provider.dart';
+import 'services/secure_storage_service.dart';
 import 'widgets/application_card.dart';
 import 'widgets/build_card.dart';
 
@@ -33,14 +36,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   CodemagicClient? client;
-  final List<Build> builds = [];
+  BuildsProvider? buildsProvider;
   final Map<String, Application> apps = {};
   final TextEditingController textEditingController = TextEditingController();
   late TabController _tabController;
   bool _isLoading = false;
-  int _skip = 0;
-  final int _limit = 20;
-  bool _hasMoreBuilds = true;
 
   final ScrollController _buildsScrollController = ScrollController();
 
@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _buildsScrollController.addListener(_onScroll);
+    _loadSavedApiKey();
   }
 
   @override
@@ -58,72 +59,112 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.dispose();
   }
 
+  Future<void> _logout() async {
+    await SecureStorageService.deleteApiKey();
+    setState(() {
+      client = null;
+      buildsProvider = null;
+      apps.clear();
+      textEditingController.clear();
+    });
+  }
+
+  Future<void> _loadSavedApiKey() async {
+    final savedApiKey = await SecureStorageService.getApiKey();
+    if (savedApiKey != null && savedApiKey.isNotEmpty) {
+      textEditingController.text = savedApiKey;
+      await onFetch();
+    }
+  }
+
   void _onScroll() {
     if (_buildsScrollController.position.pixels == _buildsScrollController.position.maxScrollExtent &&
-        !_isLoading &&
-        _hasMoreBuilds &&
-        client != null) {
+        buildsProvider != null &&
+        !buildsProvider!.isLoading &&
+        buildsProvider!.hasMoreBuilds) {
       _loadMoreBuilds();
+    }
+  }
+
+  Future<void> _loadMoreBuilds() async {
+    try {
+      await buildsProvider?.loadMoreBuilds();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading more builds: $e')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Codemagic Manager'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Applications', icon: Icon(Icons.apps)),
-            Tab(text: 'Recent Builds', icon: Icon(Icons.build)),
+    return ChangeNotifierProvider<BuildsProvider?>.value(
+      value: buildsProvider,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Codemagic Manager'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Applications', icon: Icon(Icons.apps)),
+              Tab(text: 'Recent Builds', icon: Icon(Icons.build)),
+            ],
+          ),
+        ),
+        body: Column(
+          children: [
+            // Auth key input
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textEditingController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your Codemagic API token',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: onFetch,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Connect'),
+                  ),
+                  if (client != null) ...[
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: _logout,
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+
+            // Content tabs
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildApplicationsTab(),
+                  _buildBuildsTab(),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          // Auth key input
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your Codemagic API token',
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: onFetch,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Connect'),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-
-          // Content tabs
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildApplicationsTab(),
-                _buildBuildsTab(),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -178,63 +219,80 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   Widget _buildBuildsTab() {
-    if (builds.isEmpty && !_isLoading) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.build, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'No builds found',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Connect with your API token to see recent builds',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-    }
+    return Consumer<BuildsProvider?>(
+      builder: (context, provider, child) {
+        final builds = provider?.builds ?? [];
+        final isLoading = provider?.isLoading ?? false;
 
-    return RefreshIndicator(
-      onRefresh: onFetch,
-      child: ListView.builder(
-        controller: _buildsScrollController,
-        padding: const EdgeInsets.all(16),
-        itemCount: builds.length + (_isLoading ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= builds.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
-          final build = builds[index];
-          final app = apps[build.appId];
-
-          return BuildCard(
-            buildData: build,
-            application: app,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => BuildDetailsPage(
-                    build: build,
-                    application: app!,
-                    client: client!,
-                  ),
+        if (builds.isEmpty && !isLoading) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.build, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text(
+                  'No builds found',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
+                SizedBox(height: 8),
+                Text(
+                  'Connect with your API token to see recent builds',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            try {
+              await provider?.refresh();
+            } catch (e) {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error refreshing builds: $e')),
+                );
+              }
+            }
+          },
+          child: ListView.builder(
+            controller: _buildsScrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: builds.length + (isLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index >= builds.length) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              final build = builds[index];
+              final app = apps[build.appId];
+
+              return BuildCard(
+                buildData: build,
+                application: app,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BuildDetailsPage(
+                        build: build,
+                        application: app!,
+                        client: client!,
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -243,6 +301,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       if (client == null) {
         throw Exception('CodemagicClient is not initialized');
       }
+      final builds = buildsProvider?.builds ?? [];
       if (builds.isEmpty) {
         throw Exception('No builds available');
       }
@@ -267,6 +326,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       if (client == null) {
         throw Exception('CodemagicClient is not initialized');
       }
+      final builds = buildsProvider?.builds ?? [];
       if (builds.isEmpty) {
         throw Exception('No builds available');
       }
@@ -301,6 +361,12 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         authKey: authKey,
       );
 
+      // Save API key securely
+      await SecureStorageService.saveApiKey(authKey);
+
+      // Create and setup builds provider
+      buildsProvider = BuildsProvider(client!);
+
       final result = await client!.getBuilds(skip: 0);
       if (result.wasSuccessful) {
         print(
@@ -308,12 +374,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           ' apps and ${result.data?.builds.length} builds',
         );
 
-        setState(() {
-          builds.clear();
-          builds.addAll(result.data?.builds ?? []);
-          _skip = builds.length;
-          _hasMoreBuilds = builds.length >= _limit;
-        });
+        // Initialize the provider with the initial builds data
+        if (result.data?.builds.isNotEmpty == true) {
+          await buildsProvider!.loadBuilds(refresh: true);
+        }
 
         apps.clear();
         // Add applications from the builds response
@@ -322,6 +386,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         }
 
         // Fetch missing applications
+        final builds = buildsProvider!.builds;
         final appIds = builds.map((e) => e.appId).toSet();
         for (final id in appIds) {
           if (!apps.containsKey(id)) {
@@ -352,47 +417,4 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     }
   }
 
-  Future<void> _loadMoreBuilds() async {
-    if (_isLoading || !_hasMoreBuilds || client == null) return;
-
-    setState(() => _isLoading = true);
-
-    try {
-      final result = await client!.getBuilds(skip: _skip);
-      if (result.wasSuccessful && result.data != null) {
-        final newBuilds = result.data!.builds;
-        setState(() {
-          builds.addAll(newBuilds);
-          _skip = builds.length;
-          _hasMoreBuilds = newBuilds.length >= _limit;
-        });
-
-        // Fetch missing applications for new builds
-        final newAppIds = newBuilds.map((e) => e.appId).toSet();
-        for (final id in newAppIds) {
-          if (!apps.containsKey(id)) {
-            final app = await client!.getApplication(id);
-            if (app.wasSuccessful) {
-              setState(() => apps[id] = app.data!);
-            }
-          }
-        }
-      } else {
-        print('Failed to load more builds: ${result.error}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading more builds: ${result.error}')),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading more builds: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
 }
