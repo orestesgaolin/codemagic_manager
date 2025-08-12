@@ -3,15 +3,17 @@ import 'package:flutter/foundation.dart';
 
 class BuildsProvider extends ChangeNotifier {
   final CodemagicClient client;
+  final String? appId;
   
-  BuildsProvider(this.client);
+  BuildsProvider(this.client, this.appId);
+  
+  BuildsProvider.allApplications(this.client) : appId = null;
 
   final List<Build> _builds = [];
   bool _isLoading = false;
   int _skip = 0;
   final int _limit = 20;
   bool _hasMoreBuilds = true;
-  String? _appId;
   String? _workflowId;
   String? _branch;
   String? _tag;
@@ -24,7 +26,6 @@ class BuildsProvider extends ChangeNotifier {
     _builds.clear();
     _skip = 0;
     _hasMoreBuilds = true;
-    _appId = null;
     _workflowId = null;
     _branch = null;
     _tag = null;
@@ -32,7 +33,6 @@ class BuildsProvider extends ChangeNotifier {
   }
 
   Future<void> loadBuilds({
-    String? appId,
     String? workflowId,
     String? branch,
     String? tag,
@@ -42,14 +42,12 @@ class BuildsProvider extends ChangeNotifier {
 
     // If parameters changed or refresh requested, reset the pagination
     if (refresh || 
-        appId != _appId || 
         workflowId != _workflowId || 
         branch != _branch || 
         tag != _tag) {
       _builds.clear();
       _skip = 0;
       _hasMoreBuilds = true;
-      _appId = appId;
       _workflowId = workflowId;
       _branch = branch;
       _tag = tag;
@@ -61,7 +59,7 @@ class BuildsProvider extends ChangeNotifier {
     try {
       final result = await client.getBuilds(
         skip: _skip,
-        appId: _appId,
+        appId: appId,
         workflowId: _workflowId,
         branch: _branch,
         tag: _tag,
@@ -88,7 +86,6 @@ class BuildsProvider extends ChangeNotifier {
     if (_isLoading || !_hasMoreBuilds) return;
 
     await loadBuilds(
-      appId: _appId,
       workflowId: _workflowId,
       branch: _branch,
       tag: _tag,
@@ -97,7 +94,6 @@ class BuildsProvider extends ChangeNotifier {
 
   Future<void> refresh() async {
     await loadBuilds(
-      appId: _appId,
       workflowId: _workflowId,
       branch: _branch,
       tag: _tag,

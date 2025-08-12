@@ -365,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       await SecureStorageService.saveApiKey(authKey);
 
       // Create and setup builds provider
-      buildsProvider = BuildsProvider(client!);
+      buildsProvider = BuildsProvider.allApplications(client!);
 
       final result = await client!.getBuilds(skip: 0);
       if (result.wasSuccessful) {

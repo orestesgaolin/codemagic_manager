@@ -31,7 +31,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with Si
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _buildsProvider = BuildsProvider(widget.client);
+    _buildsProvider = BuildsProvider(widget.client, widget.application.id);
     _loadBuilds();
     _buildsScrollController.addListener(_onScroll);
   }
@@ -54,10 +54,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with Si
 
   Future<void> _loadBuilds() async {
     try {
-      await _buildsProvider.loadBuilds(
-        appId: widget.application.id,
-        refresh: true,
-      );
+      await _buildsProvider.loadBuilds(refresh: true);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
