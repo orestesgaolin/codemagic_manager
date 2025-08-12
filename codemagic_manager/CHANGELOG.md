@@ -1,3 +1,8 @@
+## 0.5.0
+
+- Complete Codemagic API available, see README
+- Added much more complex example app
+
 ## 0.4.0
 
 - Updated dependencies
