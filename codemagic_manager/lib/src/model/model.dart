@@ -1,10 +1,15 @@
 export 'api_response.dart';
 export 'application.dart';
 export 'artefact.dart';
+export 'artifact_public_url_response.dart';
 export 'build.dart';
 export 'build_action.dart';
 export 'build_response.dart';
+export 'build_status_response.dart';
 export 'builds.dart';
+export 'cache.dart';
+export 'cache_delete_response.dart';
+export 'cache_response.dart';
 export 'cancel_build_response.dart';
 export 'commit.dart';
 export 'config.dart';
