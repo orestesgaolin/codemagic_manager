@@ -81,9 +81,7 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
       if (result.wasSuccessful) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(result.data?.message ?? 'Cache deletion started')),
+            SnackBar(content: Text(result.data?.message ?? 'Cache deletion started')),
           );
           _loadCaches(); // Reload to show updated state
         }
@@ -127,14 +125,11 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
     if (confirmed != true) return;
 
     try {
-      final result =
-          await widget.client.deleteApplicationCache(widget.appId, cache.id);
+      final result = await widget.client.deleteApplicationCache(widget.appId, cache.id);
       if (result.wasSuccessful) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text(result.data?.message ?? 'Cache deletion started')),
+            SnackBar(content: Text(result.data?.message ?? 'Cache deletion started')),
           );
           _loadCaches(); // Reload to show updated state
         }
@@ -185,15 +180,13 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
             children: [
               Text(
                 'Total Caches: ${_caches.length}',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               TextButton.icon(
                 onPressed: _deleteAllCaches,
                 icon: const Icon(Icons.delete_sweep, color: Colors.red),
-                label: const Text('Delete All',
-                    style: TextStyle(color: Colors.red)),
+                label: const Text('Delete All', style: TextStyle(color: Colors.red)),
               ),
             ],
           ),

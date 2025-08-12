@@ -20,8 +20,7 @@ class BuildDetailsPage extends StatefulWidget {
   State<BuildDetailsPage> createState() => _BuildDetailsPageState();
 }
 
-class _BuildDetailsPageState extends State<BuildDetailsPage>
-    with SingleTickerProviderStateMixin {
+class _BuildDetailsPageState extends State<BuildDetailsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   BuildStatusResponse? _currentStatus;
   bool _isLoadingStatus = false;
@@ -123,10 +122,8 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
                     ],
                   ),
                   const SizedBox(height: 8),
-                  if (build.startedAt != null)
-                    Text('Started: ${dateFormat.format(build.startedAt!)}'),
-                  if (build.finishedAt != null)
-                    Text('Finished: ${dateFormat.format(build.finishedAt!)}'),
+                  if (build.startedAt != null) Text('Started: ${dateFormat.format(build.startedAt!)}'),
+                  if (build.finishedAt != null) Text('Finished: ${dateFormat.format(build.finishedAt!)}'),
                   if (build.startedAt != null && build.finishedAt != null)
                     Text(
                       'Duration: ${_formatDuration(
@@ -200,17 +197,16 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
                   children: [
                     const Text(
                       'Build Actions',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    ...build.buildActions.map((action) => ListTile(
-                          leading: const Icon(Icons.play_arrow),
-                          title: Text(action.name),
-                          subtitle: action.type != null
-                              ? Text('Type: ${action.type}')
-                              : null,
-                        )),
+                    ...build.buildActions.map(
+                      (action) => ListTile(
+                        leading: const Icon(Icons.play_arrow),
+                        title: Text(action.name),
+                        subtitle: action.type != null ? Text('Type: ${action.type}') : null,
+                      ),
+                    ),
                   ],
                 ),
               ),

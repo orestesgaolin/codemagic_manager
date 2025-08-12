@@ -32,8 +32,7 @@ class ApplicationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('ID: ${application.id}'),
-            if (application.repository != null)
-              Text('Repo: ${application.repository?.htmlUrl ?? 'N/A'}'),
+            if (application.repository != null) Text('Repo: ${application.repository?.htmlUrl ?? 'N/A'}'),
           ],
         ),
         trailing: const Icon(Icons.arrow_forward_ios),

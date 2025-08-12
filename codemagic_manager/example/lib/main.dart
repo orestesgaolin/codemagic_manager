@@ -31,8 +31,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   CodemagicClient? client;
   final List<Build> builds = [];
   final Map<String, Application> apps = {};
@@ -60,8 +59,7 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void _onScroll() {
-    if (_buildsScrollController.position.pixels ==
-            _buildsScrollController.position.maxScrollExtent &&
+    if (_buildsScrollController.position.pixels == _buildsScrollController.position.maxScrollExtent &&
         !_isLoading &&
         _hasMoreBuilds &&
         client != null) {

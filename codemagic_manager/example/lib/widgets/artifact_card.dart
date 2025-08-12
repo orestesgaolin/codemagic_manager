@@ -22,12 +22,9 @@ class ArtifactCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (artifact.type != null) Text('Type: ${artifact.type}'),
-            if (artifact.packageName != null)
-              Text('Package: ${artifact.packageName}'),
-            if (artifact.versionName != null)
-              Text('Version: ${artifact.versionName}'),
-            if (artifact.size != null)
-              Text('Size: ${_formatFileSize(artifact.size!)}'),
+            if (artifact.packageName != null) Text('Package: ${artifact.packageName}'),
+            if (artifact.versionName != null) Text('Version: ${artifact.versionName}'),
+            if (artifact.size != null) Text('Size: ${_formatFileSize(artifact.size!)}'),
           ],
         ),
         trailing: IconButton(
@@ -86,25 +83,20 @@ class ArtifactCard extends StatelessWidget {
       );
 
       // Generate public URL (expires in 1 hour)
-      final expiresAt =
-          DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch ~/
-              1000;
-      final publicUrlResponse =
-          await client.getArtifactPublicUrl(artifact.url!, expiresAt);
+      final expiresAt = DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000;
+      final publicUrlResponse = await client.getArtifactPublicUrl(artifact.url!, expiresAt);
 
       Navigator.of(context).pop(); // Close loading dialog
 
       if (publicUrlResponse.wasSuccessful && publicUrlResponse.data != null) {
         final publicUrl = publicUrlResponse.data!.url;
         if (await canLaunchUrl(Uri.parse(publicUrl))) {
-          await launchUrl(Uri.parse(publicUrl),
-              mode: LaunchMode.externalApplication);
+          await launchUrl(Uri.parse(publicUrl), mode: LaunchMode.externalApplication);
         } else {
           throw Exception('Could not launch URL');
         }
       } else {
-        throw Exception(
-            publicUrlResponse.error ?? 'Failed to generate public URL');
+        throw Exception(publicUrlResponse.error ?? 'Failed to generate public URL');
       }
     } catch (e) {
       if (Navigator.of(context).canPop()) {

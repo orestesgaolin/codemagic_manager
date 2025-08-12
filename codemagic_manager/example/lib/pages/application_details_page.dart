@@ -19,8 +19,7 @@ class ApplicationDetailsPage extends StatefulWidget {
   State<ApplicationDetailsPage> createState() => _ApplicationDetailsPageState();
 }
 
-class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
-    with SingleTickerProviderStateMixin {
+class _ApplicationDetailsPageState extends State<ApplicationDetailsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Build> _builds = [];
   bool _isLoadingBuilds = false;
@@ -46,8 +45,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
   }
 
   void _onScroll() {
-    if (_buildsScrollController.position.pixels ==
-            _buildsScrollController.position.maxScrollExtent &&
+    if (_buildsScrollController.position.pixels == _buildsScrollController.position.maxScrollExtent &&
         !_isLoadingBuilds &&
         _hasMoreBuilds) {
       _loadMoreBuilds();
@@ -160,8 +158,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.apps, size: 80),
+                  errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 80),
                 ),
               ),
             ),
@@ -177,8 +174,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
             ),
             const SizedBox(height: 8),
             _buildDetailItem('URL', widget.application.repository!.htmlUrl),
-            _buildDetailItem(
-                'Default Branch', widget.application.repository!.defaultBranch),
+            _buildDetailItem('Default Branch', widget.application.repository!.defaultBranch),
           ],
           if (widget.application.workflows.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -187,12 +183,14 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...widget.application.workflows.values.map((workflow) => Card(
-                  child: ListTile(
-                    title: Text(workflow.name),
-                    subtitle: Text('ID: ${workflow.id}'),
-                  ),
-                )),
+            ...widget.application.workflows.values.map(
+              (workflow) => Card(
+                child: ListTile(
+                  title: Text(workflow.name),
+                  subtitle: Text('ID: ${workflow.id}'),
+                ),
+              ),
+            ),
           ],
         ],
       ),

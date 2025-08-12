@@ -17,10 +17,10 @@ class BuildCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMM dd, yyyy HH:mm');
-    
+
     Color statusColor = Colors.grey;
     var statusIcon = Icons.help;
-    
+
     switch (buildData.status) {
       case BuildStatus.finished:
         statusColor = Colors.green;
@@ -60,12 +60,9 @@ class BuildCard extends StatelessWidget {
           children: [
             Text('Status: ${buildData.status.name}'),
             Text('Branch: ${buildData.branch}'),
-            if (buildData.startedAt != null)
-              Text('Started: ${dateFormat.format(buildData.startedAt!)}'),
-            if (buildData.finishedAt != null)
-              Text('Finished: ${dateFormat.format(buildData.finishedAt!)}'),
-            if (buildData.artefacts.isNotEmpty)
-              Text('Artifacts: ${buildData.artefacts.length}'),
+            if (buildData.startedAt != null) Text('Started: ${dateFormat.format(buildData.startedAt!)}'),
+            if (buildData.finishedAt != null) Text('Finished: ${dateFormat.format(buildData.finishedAt!)}'),
+            if (buildData.artefacts.isNotEmpty) Text('Artifacts: ${buildData.artefacts.length}'),
           ],
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
