@@ -8,7 +8,7 @@ Codemagic has exposed an API to access information about builds and applications
 
 Take a look at example:
 
-![example app](https://github.com/orestesgaolin/codemagic_manager/raw/master/codemagic_manager/img/screenshot.png)
+<img src="https://raw.githubusercontent.com/orestesgaolin/codemagic_manager/refs/heads/master/codemagic_manager/img/screenshot.png"/>
 
 ### API documentation
 
