@@ -56,7 +56,7 @@ class Build {
   final String appId;
   @JsonKey(defaultValue: [])
   final List<Artefact> artefacts;
-  final String branch;
+  final String? branch;
   @JsonKey(defaultValue: [])
   final List<BuildAction> buildActions;
   final Commit commit;

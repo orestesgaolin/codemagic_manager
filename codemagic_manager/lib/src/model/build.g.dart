@@ -14,7 +14,7 @@ Build _$BuildFromJson(Map json) => Build(
                   (e) => Artefact.fromJson(Map<String, dynamic>.from(e as Map)))
               .toList() ??
           [],
-      branch: json['branch'] as String,
+      branch: json['branch'] as String?,
       buildActions: (json['buildActions'] as List<dynamic>?)
               ?.map((e) =>
                   BuildAction.fromJson(Map<String, dynamic>.from(e as Map)))

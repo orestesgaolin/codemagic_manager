@@ -44,8 +44,7 @@ class CodemagicClient {
       if (branch != null) queryParams['branch'] = branch;
       if (tag != null) queryParams['tag'] = tag;
 
-      final uri = Uri.parse("$apiUrl/builds").replace(
-          queryParameters: queryParams.isNotEmpty ? queryParams : null);
+      final uri = Uri.parse("$apiUrl/builds").replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
       final request = await _client.getUrl(uri);
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
@@ -61,8 +60,7 @@ class CodemagicClient {
         error: 'Response code was ${response.statusCode}',
       );
     } on HttpException catch (e) {
-      return ApiResponse(
-          wasSuccessful: false, error: 'HTTP error: ${e.message}');
+      return ApiResponse(wasSuccessful: false, error: 'HTTP error: ${e.message}');
     } catch (e) {
       return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
     }
@@ -153,8 +151,7 @@ class CodemagicClient {
   /// Cancels build by is [buildId]. Returns HTTP 208 if build already cancelled
   Future<ApiResponse<CancelBuildResponse>> cancelBuild(String buildId) async {
     try {
-      final request =
-          await _client.postUrl(Uri.parse("$apiUrl/builds/$buildId/cancel"));
+      final request = await _client.postUrl(Uri.parse("$apiUrl/builds/$buildId/cancel"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
@@ -164,8 +161,7 @@ class CodemagicClient {
 
       final response = await request.close();
 
-      if (response.statusCode == HttpStatus.ok ||
-          response.statusCode == HttpStatus.alreadyReported) {
+      if (response.statusCode == HttpStatus.ok || response.statusCode == HttpStatus.alreadyReported) {
         final data = await utf8.decoder.bind(response).join();
         final json = jsonDecode(data);
         final builds = CancelBuildResponse.fromJson(json);
@@ -187,11 +183,9 @@ class CodemagicClient {
   /// Returns build information including current status. Status can be:
   /// building, canceled, finishing, finished, failed, fetching, preparing,
   /// publishing, queued, skipped, testing, timeout, warning
-  Future<ApiResponse<BuildStatusResponse>> getBuildStatus(
-      String buildId) async {
+  Future<ApiResponse<BuildStatusResponse>> getBuildStatus(String buildId) async {
     try {
-      final request =
-          await _client.getUrl(Uri.parse("$apiUrl/builds/$buildId"));
+      final request = await _client.getUrl(Uri.parse("$apiUrl/builds/$buildId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
 
@@ -207,8 +201,7 @@ class CodemagicClient {
         error: 'Response code was ${response.statusCode}',
       );
     } on HttpException catch (e) {
-      return ApiResponse(
-          wasSuccessful: false, error: 'HTTP error: ${e.message}');
+      return ApiResponse(wasSuccessful: false, error: 'HTTP error: ${e.message}');
     } catch (e) {
       return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
     }
@@ -231,8 +224,7 @@ class CodemagicClient {
       final uri = Uri.parse(artifactUrl);
       final path = uri.path;
 
-      final request =
-          await _client.postUrl(Uri.parse("$apiUrl$path/public-url"));
+      final request = await _client.postUrl(Uri.parse("$apiUrl$path/public-url"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
@@ -269,8 +261,7 @@ class CodemagicClient {
   /// Lists all caches for the specified [appId]
   Future<ApiResponse<CacheResponse>> getApplicationCaches(String appId) async {
     try {
-      final request =
-          await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
+      final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
 
@@ -286,8 +277,7 @@ class CodemagicClient {
         error: 'Response code was ${response.statusCode}',
       );
     } on HttpException catch (e) {
-      return ApiResponse(
-          wasSuccessful: false, error: 'HTTP error: ${e.message}');
+      return ApiResponse(wasSuccessful: false, error: 'HTTP error: ${e.message}');
     } catch (e) {
       return ApiResponse(wasSuccessful: false, error: 'Unknown error: $e');
     }
@@ -296,11 +286,9 @@ class CodemagicClient {
   /// Deletes all caches for a specific application
   ///
   /// Returns 202 Accepted and cache deletion is completed asynchronously
-  Future<ApiResponse<CacheDeleteResponse>> deleteApplicationCaches(
-      String appId) async {
+  Future<ApiResponse<CacheDeleteResponse>> deleteApplicationCaches(String appId) async {
     try {
-      final request =
-          await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
+      final request = await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
@@ -335,8 +323,7 @@ class CodemagicClient {
     String cacheId,
   ) async {
     try {
-      final request = await _client
-          .deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
+      final request = await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
