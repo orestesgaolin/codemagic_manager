@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../widgets/artifact_card.dart';
 
 class BuildDetailsPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
 
   Future<void> _loadBuildStatus() async {
     setState(() => _isLoadingStatus = true);
-    
+
     try {
       final result = await widget.client.getBuildStatus(widget.build.id);
       if (result.wasSuccessful && result.data != null) {
@@ -62,7 +63,7 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMM dd, yyyy HH:mm:ss');
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Build #${widget.build.index}'),
@@ -92,16 +93,15 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
 
   Widget _buildDetailsTab(DateFormat dateFormat) {
     final build = _currentStatus?.build ?? widget.build;
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_isLoadingStatus)
-            const LinearProgressIndicator(),
+          if (_isLoadingStatus) const LinearProgressIndicator(),
           const SizedBox(height: 16),
-          
+
           // Status Card
           Card(
             child: Padding(
@@ -137,9 +137,9 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Build Info
           Card(
             child: Padding(
@@ -164,33 +164,32 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Commit Info
-          if (build.commit != null)
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Commit Information',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildDetailItem('SHA', build.commit!.hash),
-                    _buildDetailItem('Message', build.commit!.commitMessage),
-                    _buildDetailItem('Author', build.commit!.authorName),
-                    _buildDetailItem('Author Email', build.commit!.authorEmail),
-                  ],
-                ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Commit Information',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildDetailItem('SHA', build.commit.hash),
+                  _buildDetailItem('Message', build.commit.commitMessage),
+                  _buildDetailItem('Author', build.commit.authorName),
+                  _buildDetailItem('Author Email', build.commit.authorEmail),
+                ],
               ),
             ),
-          
+          ),
+
           const SizedBox(height: 16),
-          
+
           // Build Actions
           if (build.buildActions.isNotEmpty)
             Card(
@@ -201,12 +200,13 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
                   children: [
                     const Text(
                       'Build Actions',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     ...build.buildActions.map((action) => ListTile(
                           leading: const Icon(Icons.play_arrow),
-                          title: Text(action.name ?? 'Unnamed Action'),
+                          title: Text(action.name),
                           subtitle: action.type != null
                               ? Text('Type: ${action.type}')
                               : null,
@@ -252,8 +252,8 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
 
   Widget _getStatusIcon(BuildStatus status) {
     Color color = Colors.grey;
-    IconData icon = Icons.help;
-    
+    var icon = Icons.help;
+
     switch (status) {
       case BuildStatus.finished:
         color = Colors.green;
@@ -276,13 +276,13 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
         icon = Icons.refresh;
         break;
     }
-    
+
     return Icon(icon, color: color, size: 24);
   }
 
   Widget _buildDetailItem(String label, String? value) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -307,7 +307,7 @@ class _BuildDetailsPageState extends State<BuildDetailsPage>
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
-    
+
     if (hours > 0) {
       return '${hours}h ${minutes}m ${seconds}s';
     } else if (minutes > 0) {

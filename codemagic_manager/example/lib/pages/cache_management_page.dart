@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CacheManagementPage extends StatefulWidget {
@@ -28,7 +28,7 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
 
   Future<void> _loadCaches() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final result = await widget.client.getApplicationCaches(widget.appId);
       if (result.wasSuccessful && result.data != null) {
@@ -81,7 +81,9 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
       if (result.wasSuccessful) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result.data?.message ?? 'Cache deletion started')),
+            SnackBar(
+                content:
+                    Text(result.data?.message ?? 'Cache deletion started')),
           );
           _loadCaches(); // Reload to show updated state
         }
@@ -125,11 +127,14 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
     if (confirmed != true) return;
 
     try {
-      final result = await widget.client.deleteApplicationCache(widget.appId, cache.id);
+      final result =
+          await widget.client.deleteApplicationCache(widget.appId, cache.id);
       if (result.wasSuccessful) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result.data?.message ?? 'Cache deletion started')),
+            SnackBar(
+                content:
+                    Text(result.data?.message ?? 'Cache deletion started')),
           );
           _loadCaches(); // Reload to show updated state
         }
@@ -180,19 +185,21 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
             children: [
               Text(
                 'Total Caches: ${_caches.length}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               TextButton.icon(
                 onPressed: _deleteAllCaches,
                 icon: const Icon(Icons.delete_sweep, color: Colors.red),
-                label: const Text('Delete All', style: TextStyle(color: Colors.red)),
+                label: const Text('Delete All',
+                    style: TextStyle(color: Colors.red)),
               ),
             ],
           ),
         ),
         const Divider(height: 1),
-        
+
         // Cache list
         Expanded(
           child: RefreshIndicator(
@@ -213,7 +220,7 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
 
   Widget _buildCacheCard(Cache cache) {
     final dateFormat = DateFormat('MMM dd, yyyy HH:mm');
-    
+
     return Card(
       child: ListTile(
         leading: const Icon(Icons.storage, size: 32, color: Colors.blue),
@@ -240,7 +247,9 @@ class _CacheManagementPageState extends State<CacheManagementPage> {
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    if (bytes < 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 }

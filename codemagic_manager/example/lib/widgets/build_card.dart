@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class BuildCard extends StatelessWidget {
@@ -19,7 +19,7 @@ class BuildCard extends StatelessWidget {
     final dateFormat = DateFormat('MMM dd, yyyy HH:mm');
     
     Color statusColor = Colors.grey;
-    IconData statusIcon = Icons.help;
+    var statusIcon = Icons.help;
     
     switch (buildData.status) {
       case BuildStatus.finished:

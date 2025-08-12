@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:flutter/material.dart';
 
 class ApplicationCard extends StatelessWidget {
   final Application application;
@@ -27,7 +27,7 @@ class ApplicationCard extends StatelessWidget {
                 ),
               )
             : const Icon(Icons.apps, size: 40),
-        title: Text(application.appName ?? 'Unknown App'),
+        title: Text(application.appName),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

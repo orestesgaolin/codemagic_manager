@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
 import 'package:flutter/material.dart';
-import 'widgets/application_card.dart';
-import 'widgets/build_card.dart';
+
 import 'pages/application_details_page.dart';
 import 'pages/build_details_page.dart';
+import 'widgets/application_card.dart';
+import 'widgets/build_card.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage>
   int _skip = 0;
   final int _limit = 20;
   bool _hasMoreBuilds = true;
-  
+
   final ScrollController _buildsScrollController = ScrollController();
 
   @override
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage>
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: onFetch,
-                  child: _isLoading 
+                  child: _isLoading
                       ? const SizedBox(
                           width: 16,
                           height: 16,
@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage>
             ),
           ),
           const Divider(height: 1),
-          
+
           // Content tabs
           Expanded(
             child: TabBarView(
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   Widget _buildApplicationsTab() {
     final uniqueApps = apps.values.toList();
-    
+
     if (uniqueApps.isEmpty && !_isLoading) {
       return const Center(
         child: Column(
@@ -219,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage>
 
           final build = builds[index];
           final app = apps[build.appId];
-          
+
           return BuildCard(
             buildData: build,
             application: app,
@@ -248,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage>
       if (builds.isEmpty) {
         throw Exception('No builds available');
       }
-      
+
       final appId = builds.first.appId;
       final wId = builds.first.workflowId!;
       final branch = builds.first.branch;
@@ -272,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage>
       if (builds.isEmpty) {
         throw Exception('No builds available');
       }
-      
+
       final buildId = builds.first.id;
       final result = await client!.cancelBuild(buildId);
       if (result.wasSuccessful) {
@@ -295,34 +295,34 @@ class _MyHomePageState extends State<MyHomePage>
         );
         return;
       }
-      
+
       setState(() => _isLoading = true);
-      
+
       client ??= CodemagicClient(
         apiUrl: 'https://api.codemagic.io',
         authKey: authKey,
       );
-      
+
       final result = await client!.getBuilds(skip: 0);
       if (result.wasSuccessful) {
         print(
           'Success! Fetched ${result.data?.applications.length}'
           ' apps and ${result.data?.builds.length} builds',
         );
-        
+
         setState(() {
           builds.clear();
           builds.addAll(result.data?.builds ?? []);
           _skip = builds.length;
           _hasMoreBuilds = builds.length >= _limit;
         });
-        
+
         apps.clear();
         // Add applications from the builds response
         for (final app in result.data?.applications ?? <Application>[]) {
-          apps[app.id!] = app;
+          apps[app.id] = app;
         }
-        
+
         // Fetch missing applications
         final appIds = builds.map((e) => e.appId).toSet();
         for (final id in appIds) {
@@ -356,9 +356,9 @@ class _MyHomePageState extends State<MyHomePage>
 
   Future<void> _loadMoreBuilds() async {
     if (_isLoading || !_hasMoreBuilds || client == null) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final result = await client!.getBuilds(skip: _skip);
       if (result.wasSuccessful && result.data != null) {
@@ -368,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage>
           _skip = builds.length;
           _hasMoreBuilds = newBuilds.length >= _limit;
         });
-        
+
         // Fetch missing applications for new builds
         final newAppIds = newBuilds.map((e) => e.appId).toSet();
         for (final id in newAppIds) {
@@ -379,6 +379,11 @@ class _MyHomePageState extends State<MyHomePage>
             }
           }
         }
+      } else {
+        print('Failed to load more builds: ${result.error}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading more builds: ${result.error}')),
+        );
       }
     } catch (e) {
       if (mounted) {

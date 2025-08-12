@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:codemagic_manager/codemagic_manager.dart';
+import 'package:flutter/material.dart';
+
 import '../widgets/build_card.dart';
 import 'build_details_page.dart';
 import 'cache_management_page.dart';
@@ -26,7 +27,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
   int _skip = 0;
   final int _limit = 20;
   bool _hasMoreBuilds = true;
-  
+
   final ScrollController _buildsScrollController = ScrollController();
 
   @override
@@ -55,15 +56,15 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
 
   Future<void> _loadBuilds() async {
     if (_isLoadingBuilds) return;
-    
+
     setState(() => _isLoadingBuilds = true);
-    
+
     try {
       final result = await widget.client.getBuilds(
         appId: widget.application.id,
         skip: 0,
       );
-      
+
       if (result.wasSuccessful && result.data != null) {
         setState(() {
           _builds = result.data!.builds;
@@ -86,15 +87,15 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
 
   Future<void> _loadMoreBuilds() async {
     if (_isLoadingBuilds || !_hasMoreBuilds) return;
-    
+
     setState(() => _isLoadingBuilds = true);
-    
+
     try {
       final result = await widget.client.getBuilds(
         appId: widget.application.id,
         skip: _skip,
       );
-      
+
       if (result.wasSuccessful && result.data != null) {
         final newBuilds = result.data!.builds;
         setState(() {
@@ -120,7 +121,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.application.appName ?? 'App Details'),
+        title: Text(widget.application.appName),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -136,7 +137,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
           _buildDetailsTab(),
           _buildBuildsTab(),
           CacheManagementPage(
-            appId: widget.application.id!,
+            appId: widget.application.id,
             client: widget.client,
           ),
         ],
@@ -159,7 +160,8 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 80),
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.apps, size: 80),
                 ),
               ),
             ),
@@ -175,7 +177,8 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
             ),
             const SizedBox(height: 8),
             _buildDetailItem('URL', widget.application.repository!.htmlUrl),
-            _buildDetailItem('Default Branch', widget.application.repository!.defaultBranch),
+            _buildDetailItem(
+                'Default Branch', widget.application.repository!.defaultBranch),
           ],
           if (widget.application.workflows.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -186,7 +189,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
             const SizedBox(height: 8),
             ...widget.application.workflows.values.map((workflow) => Card(
                   child: ListTile(
-                    title: Text(workflow.name ?? 'Unnamed Workflow'),
+                    title: Text(workflow.name),
                     subtitle: Text('ID: ${workflow.id}'),
                   ),
                 )),
@@ -236,7 +239,7 @@ class _ApplicationDetailsPageState extends State<ApplicationDetailsPage>
 
   Widget _buildDetailItem(String label, String? value) {
     if (value == null || value.isEmpty) return const SizedBox.shrink();
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

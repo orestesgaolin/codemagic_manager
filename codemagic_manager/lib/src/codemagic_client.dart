@@ -23,7 +23,7 @@ class CodemagicClient {
   }) : _client = HttpClient();
 
   /// Retrieves [Builds] object containing list of [Application]s and [Build]s
-  /// 
+  ///
   /// Optional [skip] parameter for pagination - skips the specified number of builds.
   /// Optional [appId] parameter to filter builds by application ID.
   /// Optional [workflowId] parameter to filter builds by workflow ID.
@@ -43,8 +43,9 @@ class CodemagicClient {
       if (workflowId != null) queryParams['workflowId'] = workflowId;
       if (branch != null) queryParams['branch'] = branch;
       if (tag != null) queryParams['tag'] = tag;
-      
-      final uri = Uri.parse("$apiUrl/builds").replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+
+      final uri = Uri.parse("$apiUrl/builds").replace(
+          queryParameters: queryParams.isNotEmpty ? queryParams : null);
       final request = await _client.getUrl(uri);
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
@@ -91,7 +92,7 @@ class CodemagicClient {
 
   /// Starts new build for [Application] by its [appId], [workflowId]
   /// and [branch] or [tag]. Either [branch] or [tag] is required.
-  /// 
+  ///
   /// Optional parameters:
   /// - [environment]: Environment variables, variable groups, and software versions
   /// - [labels]: Additional labels to include for the build
@@ -113,16 +114,16 @@ class CodemagicClient {
         "json",
         charset: "utf-8",
       );
-      
+
       if (branch == null && tag == null) {
         throw ArgumentError('Either branch or tag must be provided');
       }
-      
+
       final data = <String, dynamic>{
         'appId': appId,
         'workflowId': workflowId,
       };
-      
+
       if (branch != null) data['branch'] = branch;
       if (tag != null) data['tag'] = tag;
       if (environment != null) data['environment'] = environment;
@@ -182,16 +183,18 @@ class CodemagicClient {
   }
 
   /// Gets build status for a specific [buildId]
-  /// 
+  ///
   /// Returns build information including current status. Status can be:
-  /// building, canceled, finishing, finished, failed, fetching, preparing, 
+  /// building, canceled, finishing, finished, failed, fetching, preparing,
   /// publishing, queued, skipped, testing, timeout, warning
-  Future<ApiResponse<BuildStatusResponse>> getBuildStatus(String buildId) async {
+  Future<ApiResponse<BuildStatusResponse>> getBuildStatus(
+      String buildId) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/builds/$buildId"));
+      final request =
+          await _client.getUrl(Uri.parse("$apiUrl/builds/$buildId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
-      
+
       if (response.statusCode == HttpStatus.ok) {
         final data = await utf8.decoder.bind(response).join();
         final json = jsonDecode(data);
@@ -212,11 +215,11 @@ class CodemagicClient {
   }
 
   /// Creates a public download URL for an artifact
-  /// 
+  ///
   /// This is a 2-step process:
   /// 1. Get the artifact URL from build artifacts
   /// 2. Create a public URL using this method
-  /// 
+  ///
   /// [artifactUrl] should be the secure URL from build artifacts
   /// [expiresAt] is the UNIX timestamp when the URL should expire
   Future<ApiResponse<ArtifactPublicUrlResponse>> getArtifactPublicUrl(
@@ -227,15 +230,16 @@ class CodemagicClient {
       // Extract the path from the artifact URL to use as endpoint
       final uri = Uri.parse(artifactUrl);
       final path = uri.path;
-      
-      final request = await _client.postUrl(Uri.parse("$apiUrl$path/public-url"));
+
+      final request =
+          await _client.postUrl(Uri.parse("$apiUrl$path/public-url"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
         "json",
         charset: "utf-8",
       );
-      
+
       final data = {
         'expiresAt': expiresAt,
       };
@@ -261,14 +265,15 @@ class CodemagicClient {
   }
 
   /// Retrieves cache information for a specific application
-  /// 
+  ///
   /// Lists all caches for the specified [appId]
   Future<ApiResponse<CacheResponse>> getApplicationCaches(String appId) async {
     try {
-      final request = await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
+      final request =
+          await _client.getUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       final response = await request.close();
-      
+
       if (response.statusCode == HttpStatus.ok) {
         final data = await utf8.decoder.bind(response).join();
         final json = jsonDecode(data);
@@ -289,18 +294,20 @@ class CodemagicClient {
   }
 
   /// Deletes all caches for a specific application
-  /// 
+  ///
   /// Returns 202 Accepted and cache deletion is completed asynchronously
-  Future<ApiResponse<CacheDeleteResponse>> deleteApplicationCaches(String appId) async {
+  Future<ApiResponse<CacheDeleteResponse>> deleteApplicationCaches(
+      String appId) async {
     try {
-      final request = await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
+      final request =
+          await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
         "json",
         charset: "utf-8",
       );
-      
+
       final response = await request.close();
 
       if (response.statusCode == HttpStatus.accepted) {
@@ -321,21 +328,22 @@ class CodemagicClient {
   }
 
   /// Deletes a specific cache for an application
-  /// 
+  ///
   /// Returns 202 Accepted and cache deletion is completed asynchronously
   Future<ApiResponse<CacheDeleteResponse>> deleteApplicationCache(
     String appId,
     String cacheId,
   ) async {
     try {
-      final request = await _client.deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
+      final request = await _client
+          .deleteUrl(Uri.parse("$apiUrl/apps/$appId/caches/$cacheId"));
       request.headers.add(HttpHeaders.authorizationHeader, 'Bearer $authKey');
       request.headers.contentType = ContentType(
         "application",
         "json",
         charset: "utf-8",
       );
-      
+
       final response = await request.close();
 
       if (response.statusCode == HttpStatus.accepted) {
